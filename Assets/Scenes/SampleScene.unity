@@ -368,6 +368,7 @@ GameObject:
   m_Component:
   - component: {fileID: 407894747}
   - component: {fileID: 407894746}
+  - component: {fileID: 407894748}
   m_Layer: 0
   m_Name: MazeGenerator
   m_TagString: Untagged
@@ -393,10 +394,12 @@ MonoBehaviour:
   - {fileID: 4503286144166248192, guid: 5988f40e7f3974fdca221335d5d2d3f7, type: 3}
   - {fileID: 8915251857623294207, guid: ed7d7f6d7a54d4e8297f70740280d9e2, type: 3}
   playerPrefab: {fileID: 1031318685813333101, guid: 7295590a4f2b94d6b99469d045741904, type: 3}
+  enemyPrefab: {fileID: 1885044770559623788, guid: d3d1a6fa3e103484fbd444b701f5d60f, type: 3}
   exitMaterial: {fileID: 2100000, guid: e416c3dcef0dc4b67839199e8b6b293a, type: 2}
   maxDepth: 100
+  placedChunks: []
   batteryPrefab: {fileID: 4904755319449602113, guid: cb5c6381b792440d7a0f4c48e8663b99, type: 3}
-  batteriesPerMaze: 3
+  batteriesPerMaze: 2
 --- !u!4 &407894747
 Transform:
   m_ObjectHideFlags: 0
@@ -412,6 +415,38 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &407894748
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 407894745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_SerializedVersion: 0
+  m_AgentTypeID: 0
+  m_CollectObjects: 2
+  m_Size: {x: 10, y: 10, z: 10}
+  m_Center: {x: 0, y: 2, z: 0}
+  m_LayerMask:
+    serializedVersion: 2
+    m_Bits: 8
+  m_UseGeometry: 0
+  m_DefaultArea: 0
+  m_GenerateLinks: 0
+  m_IgnoreNavMeshAgent: 1
+  m_IgnoreNavMeshObstacle: 1
+  m_OverrideTileSize: 0
+  m_TileSize: 256
+  m_OverrideVoxelSize: 0
+  m_VoxelSize: 0.33333334
+  m_MinRegionArea: 2
+  m_NavMeshData: {fileID: 0}
+  m_BuildHeightMesh: 0
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0

@@ -176,7 +176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   flashlight: {fileID: 385878848122634232}
   maxBatteryLife: 100
-  batteryDrainRate: 5
+  batteryDrainRate: 1
   batteryRechargeAmount: 25
   maxFogDensity: 0.5
   fogColor: {r: 0, g: 0, b: 0, a: 1}

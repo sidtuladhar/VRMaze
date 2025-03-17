@@ -107,7 +107,7 @@ public class FlashlightSystem : MonoBehaviour
         UpdateUI();
     }
 
-    private void GameOver()
+    void GameOver()
     {
         isOn = false;
         flashlight.enabled = false;

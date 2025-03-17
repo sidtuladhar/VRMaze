@@ -118,9 +118,4 @@ public class PlayerController : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    public Vector3 GetPosition()
-    {
-        return transform.position;
-    }
 }

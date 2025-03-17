@@ -1,18 +1,21 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
+using Unity.AI.Navigation;
 using System.Linq;
 
 public class MazeGenerator : MonoBehaviour
 {
     [SerializeField] private List<GameObject> chunkPrefabs;  // Assign your chunk assets in inspector
     [SerializeField] private GameObject playerPrefab;
+    [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Material exitMaterial; // Assign the glowing material in inspector
+
 
     [SerializeField] private int maxDepth = 5;  // Maximum recursion depth
     private int currentDepth = 0;
     private List<ConnectionPoint> openConnections = new List<ConnectionPoint>();
-    private List<GameObject> placedChunks = new List<GameObject>();
+    public List<GameObject> placedChunks = new List<GameObject>();
 
     [SerializeField] private GameObject batteryPrefab;
     [SerializeField] private int batteriesPerMaze = 3;
@@ -60,31 +63,45 @@ public class MazeGenerator : MonoBehaviour
             Debug.Log($"Reached max depth: {maxDepth}.");
         }
 
+        GetComponent<NavMeshSurface>().BuildNavMesh();
+
         // Pick exit
         if (placedChunks.Count > 0)
         {
             // Pick a random chunk from all placed chunks.
-            GameObject exitChunk = placedChunks[Random.Range(0, placedChunks.Count)];
+            GameObject randomChunk = placedChunks[Random.Range(0, placedChunks.Count)];
 
             // Get all connection points in that chunk.
-            ConnectionPoint[] exitConnections = exitChunk.GetComponentsInChildren<ConnectionPoint>();
+            ConnectionPoint[] randomConnections = randomChunk.GetComponentsInChildren<ConnectionPoint>();
 
             int maxAttempts = 100;  // Prevent infinite loop
             int attempts = 0;
 
-            if (exitConnections.Length > 0)
+            if (randomConnections.Length > 0)
             {
                 // Pick a random connection point.
-                ConnectionPoint exitConnection = exitConnections[Random.Range(0, exitConnections.Length)];
+                ConnectionPoint exitConnection = randomConnections[Random.Range(0, randomConnections.Length)];
+                ConnectionPoint enemySpawnConnection = randomConnections[Random.Range(0, randomConnections.Length)];
 
+                // Find a connection point for the exit
                 while (exitConnection.DeadEndPrefab.activeSelf == false && attempts < maxAttempts)
                 {
-                    exitConnection = exitConnections[Random.Range(0, exitConnections.Length)];
-                    exitChunk = placedChunks[Random.Range(0, placedChunks.Count)];
-                    exitConnections = exitChunk.GetComponentsInChildren<ConnectionPoint>();
+                    exitConnection = randomConnections[Random.Range(0, randomConnections.Length)];
+                    randomChunk = placedChunks[Random.Range(0, placedChunks.Count)];
+                    randomConnections = randomChunk.GetComponentsInChildren<ConnectionPoint>();
                     attempts++;
-
                 }
+
+                // Find a connection point for the enemy spawn
+                while (enemySpawnConnection.DeadEndPrefab.activeSelf == true && attempts < maxAttempts)
+                {
+                    enemySpawnConnection = randomConnections[Random.Range(0, randomConnections.Length)];
+                    randomChunk = placedChunks[Random.Range(0, placedChunks.Count)];
+                    randomConnections = randomChunk.GetComponentsInChildren<ConnectionPoint>();
+                    attempts++;
+                }
+                SpawnEnemy(enemySpawnConnection);
+
                 if (exitConnection.DeadEndPrefab.TryGetComponent<MeshRenderer>(out var renderer))
                 {
                     renderer.material = exitMaterial;
@@ -168,9 +185,6 @@ public class MazeGenerator : MonoBehaviour
 
                 if (overlapped && distance >= margin)
                 {
-                    Debug.LogWarning($"  Test: {testChunk2.name} - Size: {testCollider.bounds.size}");
-                    Debug.LogWarning($"  Placed: {placedChunk.name} - Size: {placedCollider.bounds.size}");
-                    Debug.Log($"Penetration: direction {direction}, distance {distance}");
                     collisionFound = true;
                     Destroy(testChunk2);
                 }
@@ -238,19 +252,19 @@ public class MazeGenerator : MonoBehaviour
     }
 
     private void SpawnBatteries()
-{
-    for (int i = 0; i < batteriesPerMaze; i++)
     {
-        GameObject randomChunk = placedChunks[Random.Range(0, placedChunks.Count)];
-        Vector3 randomPosition = randomChunk.transform.position + new Vector3(
-            Random.Range(-4f, 4f),
-            1f,
-            Random.Range(-4f, 4f)
-        );
-        
-        Instantiate(batteryPrefab, randomPosition, Quaternion.identity);
+        for (int i = 0; i < batteriesPerMaze; i++)
+        {
+            GameObject randomChunk = placedChunks[Random.Range(0, placedChunks.Count)];
+            Vector3 randomPosition = randomChunk.transform.position + new Vector3(
+                Random.Range(-4f, 4f),
+                1f,
+                Random.Range(-4f, 4f)
+            );
+
+            Instantiate(batteryPrefab, randomPosition, Quaternion.identity);
+        }
     }
-}
 
     private void SpawnPlayer()
     {
@@ -262,5 +276,21 @@ public class MazeGenerator : MonoBehaviour
 
         Vector3 spawnPosition = placedChunks[0].transform.position + new Vector3(0, 1f, 0);
         GameObject player = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+    }
+
+    public void SpawnEnemy(ConnectionPoint spawnPoint)
+    {
+        if (enemyPrefab == null)
+        {
+            Debug.LogError("Enemy prefab not assigned!");
+            return;
+        }
+
+        // Get the position of the connection point
+        Vector3 spawnPosition = spawnPoint.transform.position;
+
+        // Instantiate the enemy at the connection point position
+        GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
+        enemy.transform.parent = transform;
     }
 }
