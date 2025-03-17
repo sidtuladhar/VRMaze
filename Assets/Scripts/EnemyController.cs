@@ -17,17 +17,17 @@ public class EnemyController : MonoBehaviour
     private Transform player;
     private MazeGenerator mazeGenerator;
     private bool isChasing = false;
-    private TextMeshProUGUI gameOverText;
+    private TextMeshProUGUI deathText;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
-        gameOverText = GameObject.Find("GameOver").GetComponent<TextMeshProUGUI>();
-        if (gameOverText != null)
+        deathText = GameObject.Find("Death").GetComponent<TextMeshProUGUI>();
+        if (deathText != null)
         {
-            gameOverText = gameOverText.GetComponent<TextMeshProUGUI>();
-            gameOverText.gameObject.SetActive(false);
+            deathText = deathText.GetComponent<TextMeshProUGUI>();
+            deathText.gameObject.SetActive(false);
         }
 
         agent = GetComponent<NavMeshAgent>();
@@ -57,7 +57,6 @@ public class EnemyController : MonoBehaviour
         if (IsPlayerLookingAtEnemy())
         {
             // Player detected, start chasing
-            Debug.Log("Player is looking at enemy");
             isChasing = true;
             agent.SetDestination(player.position);
             agent.speed = chaseSpeed;
@@ -80,13 +79,16 @@ public class EnemyController : MonoBehaviour
         else if (isChasing)
         {
             // Lost sight of player, go back to roaming
-            isChasing = false;
-            agent.speed = normalSpeed;
-            agent.acceleration = normalAcceleration;
-            SetRandomDestination();
+            if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance)
+            {
+                isChasing = false;
+                agent.speed = normalSpeed;
+                agent.acceleration = normalAcceleration;
+                animator.SetBool("isChasing", false);
+                animator.SetBool("isWalking", true);
+                SetRandomDestination();
+            }
 
-            animator.SetBool("isChasing", false);
-            animator.SetBool("isWalking", true);
         }
         else
         {
@@ -148,27 +150,42 @@ public class EnemyController : MonoBehaviour
         Vector3 playerToEnemyDirection = (transform.position - player.position).normalized;
 
         // Get the player's forward direction (where they're looking)
-        Vector3 playerForwardDirection = player.forward;
+        Vector3 playerForwardDirection = Camera.main.transform.forward;
 
         // Calculate the angle between these two vectors
         float angle = Vector3.Angle(playerForwardDirection, playerToEnemyDirection);
 
-        // Check if player is looking at enemy (within a certain angle)
-        float playerVisionAngle = 80f; // Player's field of view angle
-
         // Check distance too
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (angle <= playerVisionAngle && distanceToPlayer <= detectionRange)
+
+        if (angle <= visionAngle && distanceToPlayer <= detectionRange)
         {
-            // Check line of sight with SphereCast
-            RaycastHit hit;
-            if (Physics.SphereCast(player.position + Vector3.up * 1.0f, 0.5f,
-                                  playerToEnemyDirection, out hit, detectionRange))
+
+            // Cast multiple rays at slightly different positions
+            Vector3 rayStart = player.position + Vector3.up * 1.0f;
+
+            // Define ray offsets (center, slightly up, slightly down, slightly left, slightly right)
+            // Instead of position offsets, use angle offsets
+            Vector3 centerRay = playerToEnemyDirection;
+            Vector3 leftRay = Quaternion.AngleAxis(-10, Vector3.up) * centerRay;
+            Vector3 rightRay = Quaternion.AngleAxis(10, Vector3.up) * centerRay;
+
+            Vector3[] rayDirections = new Vector3[] {
+                centerRay,
+                leftRay,
+                rightRay
+            };
+
+            foreach (Vector3 direction in rayDirections)
             {
-                if (hit.transform == transform || hit.transform.IsChildOf(transform))
+                RaycastHit hit;
+                if (Physics.Raycast(rayStart, direction, out hit, detectionRange))
                 {
-                    return true;
+                    if (hit.transform == transform || hit.transform.IsChildOf(transform))
+                    {
+                        return true;
+                    }
                 }
             }
         }
@@ -191,10 +208,10 @@ public class EnemyController : MonoBehaviour
         float currentFogDensity = RenderSettings.fogDensity;
 
         // Show game over text
-        if (gameOverText != null)
+        if (deathText != null)
         {
-            gameOverText.color = new Color(1f, 0f, 0f, 0f);
-            gameOverText.gameObject.SetActive(true);
+            deathText.color = new Color(1f, 0f, 0f, 0f);
+            deathText.gameObject.SetActive(true);
         }
 
         // Disable player control
@@ -211,10 +228,10 @@ public class EnemyController : MonoBehaviour
             float t = elapsedTime / 2f;
             RenderSettings.fogDensity = Mathf.Lerp(currentFogDensity, 0.5f, t);
 
-            if (gameOverText != null)
+            if (deathText != null)
             {
                 float textAlpha = Mathf.Lerp(0f, 1f, t * 2f - 0.5f); // Start fading in at 25% through the transition
-                gameOverText.color = new Color(1f, 0f, 0f, Mathf.Clamp01(textAlpha));
+                deathText.color = new Color(1f, 0f, 0f, Mathf.Clamp01(textAlpha));
             }
 
             elapsedTime += Time.deltaTime;
@@ -228,37 +245,54 @@ public class EnemyController : MonoBehaviour
     // Optional: Visualize detection range in editor
     private void OnDrawGizmosSelected()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(transform.position, detectionRange);
+        if (player == null) return;
 
-        // Draw vision cone
-        Gizmos.color = Color.red;
-        Vector3 forward = transform.forward * detectionRange;
+        // Draw detection range around player
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireSphere(player.position, detectionRange);
+
+        // Draw the player's vision cone
+        Vector3 playerForwardDirection = Camera.main != null ? Camera.main.transform.forward : player.forward;
+        Gizmos.color = Color.blue;
+        Vector3 playerForward = playerForwardDirection * detectionRange;
         Quaternion leftRayRotation = Quaternion.AngleAxis(-visionAngle, Vector3.up);
         Quaternion rightRayRotation = Quaternion.AngleAxis(visionAngle, Vector3.up);
-        Vector3 leftRayDirection = leftRayRotation * forward;
-        Vector3 rightRayDirection = rightRayRotation * forward;
-        Gizmos.DrawRay(transform.position, leftRayDirection);
-        Gizmos.DrawRay(transform.position, rightRayDirection);
+        Vector3 leftRayDirection = leftRayRotation * playerForward;
+        Vector3 rightRayDirection = rightRayRotation * playerForward;
+        Gizmos.DrawRay(player.position, leftRayDirection);
+        Gizmos.DrawRay(player.position, rightRayDirection);
 
-        Gizmos.color = Color.green;
-        float sphereRadius = detectionRange; // Same radius used in your SphereCast
-        Vector3 sphereStartPosition = transform.position + Vector3.up * 1.0f; // Starting position of your SphereCast
+        // Draw the multiple raycasts from player to enemy using angular offsets
+        Vector3 playerToEnemyDirection = (transform.position - player.position).normalized;
+        Vector3 rayStart = player.position + Vector3.up * 1.0f;
 
-        // Draw the starting sphere
-        Gizmos.DrawWireSphere(sphereStartPosition, sphereRadius);
+        // Define ray directions with angular offsets
+        Vector3 centerRay = playerToEnemyDirection;
+        Vector3 leftRay = Quaternion.AngleAxis(-10, Vector3.up) * centerRay;
+        Vector3 rightRay = Quaternion.AngleAxis(10, Vector3.up) * centerRay;
 
-        // If player is in scene, draw the direction and end sphere
-        if (player != null)
+        Vector3[] rayDirections = new Vector3[] {
+        centerRay,
+        leftRay,
+        rightRay
+    };
+
+        // Draw each ray with a different color
+        Color[] rayColors = new Color[] {
+        Color.red,
+        Color.cyan,
+        Color.magenta
+    };
+
+        for (int i = 0; i < rayDirections.Length; i++)
         {
-            Vector3 directionToPlayer = (player.position - transform.position).normalized;
-            Vector3 sphereEndPosition = sphereStartPosition + directionToPlayer * detectionRange;
-
-            // Draw line representing the SphereCast direction
-            Gizmos.DrawLine(sphereStartPosition, sphereEndPosition);
-
-            // Draw the end sphere
-            Gizmos.DrawWireSphere(sphereEndPosition, sphereRadius);
+            Gizmos.color = rayColors[i];
+            Gizmos.DrawSphere(rayStart, 0.05f); // Small sphere at ray start
+            Gizmos.DrawRay(rayStart, rayDirections[i] * detectionRange);
         }
+
+        // Draw kill range
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, killRange);
     }
 }

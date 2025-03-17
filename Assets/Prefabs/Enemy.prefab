@@ -70,11 +70,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 781d1ac45c0694c0591fce3ee51698e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  detectionRange: 70
-  visionAngle: 90
+  detectionRange: 25
+  visionAngle: 70
   killRange: 5
   normalSpeed: 4
-  chaseSpeed: 15
+  chaseSpeed: 20
   normalAcceleration: 8
   chaseAcceleration: 20
 --- !u!195 &1128649611258098478
@@ -88,7 +88,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 1
   m_Speed: 3.5
-  m_Acceleration: 10
+  m_Acceleration: 20
   avoidancePriority: 50
   m_AngularSpeed: 120
   m_StoppingDistance: 0

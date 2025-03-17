@@ -7,12 +7,13 @@ using System.Linq;
 public class MazeGenerator : MonoBehaviour
 {
     [SerializeField] private List<GameObject> chunkPrefabs;  // Assign your chunk assets in inspector
+    [SerializeField] private List<GameObject> singleChunkPrefabs;  // Chunks that will only be used once
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Material exitMaterial; // Assign the glowing material in inspector
 
 
-    [SerializeField] private int maxDepth = 5;  // Maximum recursion depth
+    [SerializeField] private int maxDepth = 10;  // Maximum recursion depth
     private int currentDepth = 0;
     private List<ConnectionPoint> openConnections = new List<ConnectionPoint>();
     public List<GameObject> placedChunks = new List<GameObject>();
@@ -22,10 +23,10 @@ public class MazeGenerator : MonoBehaviour
 
     void Start()
     {
-        GenerateMaze();
+        GenerateMaze(maxDepth);
     }
 
-    private void GenerateMaze(int maxDepth = 5)
+    private void GenerateMaze(int maxDepth)
     {
         currentDepth = 0;
 
@@ -36,6 +37,9 @@ public class MazeGenerator : MonoBehaviour
 
         // Add first chunk to placedChunks dictionary
         placedChunks.Add(firstInstance);
+        
+        // Add single use chunks to chunkPrefabs (they will be removed after being placed)
+        chunkPrefabs.AddRange(singleChunkPrefabs);
 
         ConnectionPoint[] connections = firstInstance.GetComponentsInChildren<ConnectionPoint>();
         openConnections.AddRange(connections);
@@ -189,7 +193,7 @@ public class MazeGenerator : MonoBehaviour
                     Destroy(testChunk2);
                 }
             }
-            if (!collisionFound)
+            if (!collisionFound) // If no collision was found, place the chunk
             {
 
                 testChunk2.transform.parent = transform;
@@ -207,6 +211,12 @@ public class MazeGenerator : MonoBehaviour
                     {
                         matchingConnection.DeadEndPrefab.SetActive(false);
                     }
+                }
+
+                if (singleChunkPrefabs.Contains(randomChunk))
+                {
+                    Debug.Log("Removing single chunk" + chunkPrefabs.Count);
+                    chunkPrefabs.Remove(randomChunk);
                 }
                 return true;
             }
