@@ -18,11 +18,15 @@ public class EnemyController : MonoBehaviour
     private MazeGenerator mazeGenerator;
     private bool isChasing = false;
     private TextMeshProUGUI deathText;
+    [SerializeField] private AudioClip walkingSound;
+    private AudioSource enemyAudio;
+    private FlashlightSystem flashlightSystem;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
+        enemyAudio = gameObject.AddComponent<AudioSource>();
         deathText = GameObject.Find("Death").GetComponent<TextMeshProUGUI>();
         if (deathText != null)
         {
@@ -47,12 +51,19 @@ public class EnemyController : MonoBehaviour
 
         // Set initial destination
         SetRandomDestination();
+
+        flashlightSystem = GameObject.Find("Player").GetComponent<FlashlightSystem>();
     }
 
     // Update is called once per frame
     void Update()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= detectionRange * 1.5f)
+        {
+            enemyAudio.PlayOneShot(walkingSound);
+        }
 
         if (IsPlayerLookingAtEnemy())
         {
@@ -159,7 +170,7 @@ public class EnemyController : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
 
-        if (angle <= visionAngle && distanceToPlayer <= detectionRange)
+        if (angle <= visionAngle && distanceToPlayer <= detectionRange && flashlightSystem.isOn)
         {
 
             // Cast multiple rays at slightly different positions
