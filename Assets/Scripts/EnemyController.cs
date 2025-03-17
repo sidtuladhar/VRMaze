@@ -5,12 +5,13 @@ using UnityEngine.SceneManagement;
 
 public class EnemyController : MonoBehaviour
 {
-    [SerializeField] private float moveSpeed = 3f;
     [SerializeField] private float detectionRange = 10f;
     [SerializeField] private float visionAngle = 120f; // Half angle of vision cone
     [SerializeField] private float killRange = 1.5f;
     [SerializeField] private float normalSpeed = 3f;
     [SerializeField] private float chaseSpeed = 6f;
+    [SerializeField] private float normalAcceleration = 8f;
+    [SerializeField] private float chaseAcceleration = 16f;
     private NavMeshAgent agent;
     private Animator animator;
     private Transform player;
@@ -37,7 +38,7 @@ public class EnemyController : MonoBehaviour
         if (agent == null)
         {
             agent = gameObject.AddComponent<NavMeshAgent>();
-            agent.speed = moveSpeed;
+            agent.speed = normalSpeed;
             agent.angularSpeed = 120f;
             agent.acceleration = 8f;
             agent.stoppingDistance = 0.5f;
@@ -52,14 +53,15 @@ public class EnemyController : MonoBehaviour
     void Update()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
-        Debug.Log("Distance to player: " + distanceToPlayer);
 
-        if (IsPlayerInSight(distanceToPlayer))
+        if (IsPlayerLookingAtEnemy())
         {
             // Player detected, start chasing
-            Debug.Log("Player detected!");
+            Debug.Log("Player is looking at enemy");
             isChasing = true;
             agent.SetDestination(player.position);
+            agent.speed = chaseSpeed;
+            agent.acceleration = chaseAcceleration;
 
             // Set chase animation
             if (animator != null)
@@ -79,6 +81,8 @@ public class EnemyController : MonoBehaviour
         {
             // Lost sight of player, go back to roaming
             isChasing = false;
+            agent.speed = normalSpeed;
+            agent.acceleration = normalAcceleration;
             SetRandomDestination();
 
             animator.SetBool("isChasing", false);
@@ -138,28 +142,35 @@ public class EnemyController : MonoBehaviour
         Debug.LogWarning("Failed to find a valid destination after " + maxAttempts + " attempts");
     }
 
-    private bool IsPlayerInSight(float distanceToPlayer)
+    private bool IsPlayerLookingAtEnemy()
     {
+        // Get the direction from player to enemy
+        Vector3 playerToEnemyDirection = (transform.position - player.position).normalized;
 
-        if (distanceToPlayer > detectionRange)
-            return false;
+        // Get the player's forward direction (where they're looking)
+        Vector3 playerForwardDirection = player.forward;
 
-        // Check if player is within vision angle
-        Vector3 directionToPlayer = (player.position - transform.position).normalized;
-        float angle = Vector3.Angle(transform.forward, directionToPlayer);
+        // Calculate the angle between these two vectors
+        float angle = Vector3.Angle(playerForwardDirection, playerToEnemyDirection);
 
-        if (angle > visionAngle)
-            return false;
+        // Check if player is looking at enemy (within a certain angle)
+        float playerVisionAngle = 80f; // Player's field of view angle
 
-        // Finally, check if there's a clear line of sight
-        float sphereRadius = 0.5f; // Adjust based on your needs
-        RaycastHit hit;
-        if (Physics.SphereCast(transform.position + Vector3.up * 1.0f, sphereRadius, directionToPlayer, out hit, detectionRange))
+        // Check distance too
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (angle <= playerVisionAngle && distanceToPlayer <= detectionRange)
         {
-            // If we hit the player, they're visible
-            if (hit.transform == player)
-                Debug.Log("Player in sight!");
-            return true;
+            // Check line of sight with SphereCast
+            RaycastHit hit;
+            if (Physics.SphereCast(player.position + Vector3.up * 1.0f, 0.5f,
+                                  playerToEnemyDirection, out hit, detectionRange))
+            {
+                if (hit.transform == transform || hit.transform.IsChildOf(transform))
+                {
+                    return true;
+                }
+            }
         }
 
         return false;
@@ -250,6 +261,4 @@ public class EnemyController : MonoBehaviour
             Gizmos.DrawWireSphere(sphereEndPosition, sphereRadius);
         }
     }
-
-
 }
