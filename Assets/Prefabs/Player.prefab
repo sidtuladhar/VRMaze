@@ -178,6 +178,7 @@ MonoBehaviour:
   maxBatteryLife: 100
   batteryDrainRate: 1
   batteryRechargeAmount: 25
+  isOn: 1
   maxFogDensity: 0.5
   fogColor: {r: 0, g: 0, b: 0, a: 1}
   gameOverDelay: 5

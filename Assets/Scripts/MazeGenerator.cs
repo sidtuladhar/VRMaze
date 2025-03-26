@@ -3,6 +3,7 @@ using Random = UnityEngine.Random;
 using System.Collections.Generic;
 using Unity.AI.Navigation;
 using System.Linq;
+using UnityEngine.AI;
 
 public class MazeGenerator : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class MazeGenerator : MonoBehaviour
 
     [SerializeField] private GameObject batteryPrefab;
     [SerializeField] private int batteriesPerMaze = 3;
+    private GameObject enemy;
 
     void Start()
     {
@@ -37,7 +39,7 @@ public class MazeGenerator : MonoBehaviour
 
         // Add first chunk to placedChunks dictionary
         placedChunks.Add(firstInstance);
-        
+
         // Add single use chunks to chunkPrefabs (they will be removed after being placed)
         chunkPrefabs.AddRange(singleChunkPrefabs);
 
@@ -104,7 +106,8 @@ public class MazeGenerator : MonoBehaviour
                     randomConnections = randomChunk.GetComponentsInChildren<ConnectionPoint>();
                     attempts++;
                 }
-                SpawnEnemy(enemySpawnConnection);
+                SpawnPlayer();
+                enemy = SpawnEnemy(enemySpawnConnection);
 
                 if (exitConnection.DeadEndPrefab.TryGetComponent<MeshRenderer>(out var renderer))
                 {
@@ -132,7 +135,6 @@ public class MazeGenerator : MonoBehaviour
         }
 
         SpawnBatteries();
-        SpawnPlayer();
     }
 
     private bool TestConnection(ConnectionPoint connectionPoint)
@@ -227,11 +229,13 @@ public class MazeGenerator : MonoBehaviour
     public void RegenerateMaze()
     {
         GameObject existingPlayer = GameObject.FindWithTag("Player");
-
+        enemy.SetActive(false);
+        Destroy(enemy);
 
         // Clean up existing maze
         foreach (GameObject chunk in placedChunks)
         {
+            chunk.SetActive(false);
             Destroy(chunk);
         }
         placedChunks.Clear();
@@ -240,6 +244,7 @@ public class MazeGenerator : MonoBehaviour
         maxDepth += 5;
 
         // Generate new maze
+        NavMesh.RemoveAllNavMeshData();
         GenerateMaze(maxDepth);
 
         if (existingPlayer != null)
@@ -258,7 +263,6 @@ public class MazeGenerator : MonoBehaviour
             }
 
         }
-        SpawnBatteries();
     }
 
     private void SpawnBatteries()
@@ -288,12 +292,11 @@ public class MazeGenerator : MonoBehaviour
         GameObject player = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
     }
 
-    public void SpawnEnemy(ConnectionPoint spawnPoint)
+    public GameObject SpawnEnemy(ConnectionPoint spawnPoint)
     {
         if (enemyPrefab == null)
         {
             Debug.LogError("Enemy prefab not assigned!");
-            return;
         }
 
         // Get the position of the connection point
@@ -302,5 +305,6 @@ public class MazeGenerator : MonoBehaviour
         // Instantiate the enemy at the connection point position
         GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
         enemy.transform.parent = transform;
+        return enemy;
     }
 }

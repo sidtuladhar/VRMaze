@@ -26,14 +26,13 @@ public class EnemyController : MonoBehaviour
     void Start()
     {
 
-        enemyAudio = gameObject.AddComponent<AudioSource>();
+        enemyAudio = GetComponent<AudioSource>();
         deathText = GameObject.Find("Death").GetComponent<TextMeshProUGUI>();
         if (deathText != null)
         {
             deathText = deathText.GetComponent<TextMeshProUGUI>();
             deathText.gameObject.SetActive(false);
-        }
-
+        } 
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -52,7 +51,11 @@ public class EnemyController : MonoBehaviour
         // Set initial destination
         SetRandomDestination();
 
-        flashlightSystem = GameObject.Find("Player").GetComponent<FlashlightSystem>();
+        flashlightSystem = player.GetComponent<FlashlightSystem>();
+        if (flashlightSystem == null)
+        {
+            Debug.LogWarning("FlashlightSystem not found on player");
+        }
     }
 
     // Update is called once per frame
@@ -60,7 +63,7 @@ public class EnemyController : MonoBehaviour
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (distanceToPlayer <= detectionRange * 1.5f)
+        if (distanceToPlayer <= detectionRange * 2.0f && !enemyAudio.isPlaying)
         {
             enemyAudio.PlayOneShot(walkingSound);
         }
