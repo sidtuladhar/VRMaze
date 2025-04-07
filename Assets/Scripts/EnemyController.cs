@@ -18,18 +18,21 @@ public class EnemyController : MonoBehaviour
     private MazeGenerator mazeGenerator;
     private bool isChasing = false;
     private TextMeshProUGUI deathText;
+    [SerializeField] private AudioClip walkingSound;
+    private AudioSource enemyAudio;
+    private FlashlightSystem flashlightSystem;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
 
+        enemyAudio = GetComponent<AudioSource>();
         deathText = GameObject.Find("Death").GetComponent<TextMeshProUGUI>();
         if (deathText != null)
         {
             deathText = deathText.GetComponent<TextMeshProUGUI>();
             deathText.gameObject.SetActive(false);
-        }
-
+        } 
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -47,12 +50,23 @@ public class EnemyController : MonoBehaviour
 
         // Set initial destination
         SetRandomDestination();
+
+        flashlightSystem = player.GetComponent<FlashlightSystem>();
+        if (flashlightSystem == null)
+        {
+            Debug.LogWarning("FlashlightSystem not found on player");
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+        if (distanceToPlayer <= detectionRange * 2.0f && !enemyAudio.isPlaying)
+        {
+            enemyAudio.PlayOneShot(walkingSound);
+        }
 
         if (IsPlayerLookingAtEnemy())
         {
@@ -159,7 +173,7 @@ public class EnemyController : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
 
-        if (angle <= visionAngle && distanceToPlayer <= detectionRange)
+        if (angle <= visionAngle && distanceToPlayer <= detectionRange && flashlightSystem.isOn)
         {
 
             // Cast multiple rays at slightly different positions

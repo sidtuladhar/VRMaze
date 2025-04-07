@@ -13,7 +13,7 @@ public class FlashlightSystem : MonoBehaviour
     [Header("Flashlight Properties")]
 
     private float currentBattery;
-    private bool isOn = true;
+    public bool isOn = true;
     private Image batteryBar;
 
     [Header("Game Over Effects")]
