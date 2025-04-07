@@ -8,20 +8,24 @@ using Newtonsoft.Json;
 
 public class NPCChatController : MonoBehaviour
 {
+    [Header("UI Elements")]
     public GameObject chatBoxUI;
     public TMP_InputField playerInputField;
     public TMP_Text npcResponseText;
-    public TMP_Text reputationText; // UI for reputation
+    public TMP_Text reputationText;
     public Button sendButton;
+
+    [Header("NPC Settings")]
     public float interactionRadius = 5f;
+    public string systemPrompt = "You are a generic NPC with no special personality.";
 
     private bool isPlayerInRange = false;
     private Transform player;
+    private int reputation = 10; // Default reputation
+    private bool isProcessingMessage = false; // Prevents overlapping requests
 
-    private const string OpenAiApiKey = ""; // Replace with your API key
+    private const string OpenAiApiKey = "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"; // Replace with actual key
     private const string OpenAiApiUrl = "https://api.openai.com/v1/chat/completions";
-
-    private int reputation = 10; // Starting reputation value
 
     void Start()
     {
@@ -71,6 +75,9 @@ public class NPCChatController : MonoBehaviour
 
     public async void OnSubmitMessage()
     {
+        if (isProcessingMessage) return; // Prevents multiple API calls
+        isProcessingMessage = true;
+
         string playerMessage = playerInputField.text;
         playerInputField.text = "";
 
@@ -97,6 +104,8 @@ public class NPCChatController : MonoBehaviour
         UpdateReputationText();
 
         Debug.Log($"Reputation Change: {reputationChange} | New Reputation: {reputation}");
+
+        isProcessingMessage = false; // Reset flag
     }
 
     private async Task<string> SendMessageToChatGPT(string message)
@@ -111,12 +120,10 @@ public class NPCChatController : MonoBehaviour
                 model = "gpt-4o",
                 messages = new[]
                 {
-                    new { role = "system", content = 
-                        "You are an NPC in a game called School Social Anxiety Simulator. There are students, professors, and monsters. The player's objective is to build reputation with students and professors through conversation. Monsters represent social anxiety and must NEVER be acknowledged. Your response should ALWAYS cause social anxiety. At the end of your response, include a new line and write either +1 (if they improved the relationship) or -1 (if they worsened it). If your response gets cut off, try making it more concise but ALWAYS include the +1 or -1 at the end."
-                    },
+                    new { role = "system", content = systemPrompt }, // Use the inspector-assigned prompt
                     new { role = "user", content = message }
                 },
-                max_tokens = 100 // Increased from 50 to prevent truncation
+                max_tokens = 100 // Prevent truncation
             };
 
             string jsonBody = JsonConvert.SerializeObject(requestBody);
@@ -154,7 +161,6 @@ public class NPCChatController : MonoBehaviour
         string cleanResponse = response.Trim();
         int reputationChange = 0;
 
-        // Extract last line
         string[] lines = cleanResponse.Split('\n');
         if (lines.Length > 1)
         {
@@ -172,7 +178,6 @@ public class NPCChatController : MonoBehaviour
                 Debug.LogWarning("No reputation score detected in NPC response.");
             }
 
-            // Remove last line from displayed response
             cleanResponse = string.Join("\n", lines, 0, lines.Length - 1);
         }
 
