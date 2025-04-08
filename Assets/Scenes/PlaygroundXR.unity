@@ -2067,6 +2067,7 @@ GameObject:
   - component: {fileID: 800667991}
   - component: {fileID: 800667993}
   - component: {fileID: 800667994}
+  - component: {fileID: 800667995}
   m_Layer: 0
   m_Name: NPC_WILL
   m_TagString: Untagged
@@ -2138,7 +2139,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 800667990}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3a7c8ad4d9f644414afee7dd8b021e5e, type: 3}
   m_Name: 
@@ -2167,6 +2168,26 @@ MonoBehaviour:
   - I heard you fucked up the midterm
   - Have you found an internship yet?
   initialReputations: 01000000ffffffffffffffff
+--- !u!114 &800667995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 800667990}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c6ff2eaa43ea48a3b5fabbbeb22965c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiDocument: {fileID: 1262519187}
+  npcResponseText: Hello I am bob
+  optionOneText: fuck you
+  optionTwoText: i hate you
+  optionThreeText: i love you
+  player: {fileID: 2063160382}
+  npc: {fileID: 800667992}
+  interactionRadius: 5
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -4196,6 +4217,11 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!4 &2063160382 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 7964925604951533986, guid: 7295590a4f2b94d6b99469d045741904, type: 3}
+  m_PrefabInstance: {fileID: 578004713}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2118827826
 GameObject:
   m_ObjectHideFlags: 0
