@@ -15,10 +15,11 @@
     justify-content: flex-end;
     align-content: flex-end;
     -unity-font-definition: url("project://database/Assets/UI/Remnant-Regular.ttf?fileID=12800000&guid=12be3d0cd25a3457e9b1f73f5b29de1d&type=3#Remnant-Regular");
-    font-size: 8px;
+    font-size: 50%;
     min-width: 0;
     padding-top: 5px;
     padding-right: 5px;
     padding-bottom: 5px;
     padding-left: 5px;
+    -unity-background-image-tint-color: rgb(219, 219, 219);
 }

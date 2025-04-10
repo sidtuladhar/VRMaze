@@ -1,71 +1,52 @@
 using UnityEngine;
-using UnityEngine.UIElements;
+using TMPro;
+using UnityEngine.UI;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using System.Linq;
 using System.Collections.Generic;
-
+using System.Collections;
 
 public class NPCDialogueController : MonoBehaviour
 {
-    
-    [Header("UI Toolkit")]
-    public UIDocument uiDocument;
+    [Header("UI Elements")]
+    public GameObject dialogueUI;
+    public TMP_Text reputationText;
+    public TMP_Text npcResponseText;
+    public Button[] responseButtons;
+    public TMP_Text[] responseButtonTexts;
 
     [Header("NPC Settings")]
-    public string systemPrompt = "You are a student NPC in a game called School Social Anxiety simulator...";
     public float interactionRadius = 5f;
-
-    private bool hasTalkedToPlayer = false;
-
-    [Header("Initial Dialogue")]
-    [TextArea] public string initialNPCResponse = "I got class in 5 minutes, what's up?";
-    public string[] initialOptions = new string[3];
-    public int[] initialReputations = new int[3];
-
-
-    private VisualElement root;
-    private Label reputationLabel;
-    private Label npcResponseLabel;
-    private Button[] optionButtons;
+    public string systemPrompt;
+    public string[] initialNPCResponses;
 
     private Transform player;
     private bool isPlayerInRange = false;
-    private int reputation = 10;
+    private bool isConversationStarted = false;
     private bool isProcessing = false;
+    private int reputation = 10;
+    private int[] optionReputationDeltas = new int[3]; // +1, -1, -1, etc.
 
-    private const string OpenAiApiKey = ""; // Insert your API key here
+    private string currentNPCLine = "";
+    private string[] currentOptions = new string[3];
+
+    private const string OpenAiApiKey = ""; // Add key
     private const string OpenAiApiUrl = "https://api.openai.com/v1/chat/completions";
 
     void Start()
     {
+        dialogueUI.SetActive(false);
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        root = uiDocument.rootVisualElement;
-        uiDocument.gameObject.SetActive(false);
 
-        reputationLabel = root.Q<Label>("reputation");
-        npcResponseLabel = root.Q<Label>("NPCResponse");
-        optionButtons = new Button[]
+        for (int i = 0; i < responseButtons.Length; i++)
         {
-            root.Q<Button>("optionOne"),
-            root.Q<Button>("optionTwo"),
-            root.Q<Button>("optionThree")
-        };
-
-        if (reputationLabel == null) Debug.LogError("Could not find #reputation label!");
-        if (npcResponseLabel == null) Debug.LogError("Could not find #NPCResponse label!");
-        for (int i = 0; i < optionButtons.Length; i++)
-        {
-            if (optionButtons[i] == null) Debug.LogError($"Option button {i} not found!");
-        }
-        foreach (var button in optionButtons)
-        {
-            button.clicked += () => OnOptionSelected(button.text);
+            int index = i;
+            responseButtons[i].onClick.AddListener(() => OnResponseClick(index));
         }
 
-        UpdateReputationUI();
+        UpdateReputationText();
     }
 
     void Update()
@@ -73,153 +54,107 @@ public class NPCDialogueController : MonoBehaviour
         if (player == null) return;
 
         float distance = Vector3.Distance(transform.position, player.position);
+
         if (distance <= interactionRadius && !isPlayerInRange)
         {
             isPlayerInRange = true;
-            uiDocument.gameObject.SetActive(true);
+            UnlockCursor();
+            dialogueUI.SetActive(true);
 
-            if (!hasTalkedToPlayer)
-                GenerateInitialDialogue();
-        }
-
-        else if (distance > interactionRadius && isPlayerInRange)
-        {
-            isPlayerInRange = false;
-            uiDocument.gameObject.SetActive(false);
-        }
-    }
-
-    private void OnOptionSelected(string playerChoice)
-    {
-        if (isProcessing) return;
-        isProcessing = true;
-        ProcessDialogue(playerChoice);
-    }
-
-    private void UpdateReputationUI()
-    {
-        reputationLabel.text = $"Reputation: {reputation}";
-    }
-
-    private void GenerateInitialDialogue()
-    {
-        npcResponseLabel.text = initialNPCResponse;
-
-        string[] options = (string[])initialOptions.Clone();
-        int[] reps = (int[])initialReputations.Clone();
-        ShuffleOptions(options, reps);
-
-        for (int i = 0; i < 3; i++)
-        {
-            int index = i;
-            string optionText = options[index];
-            int reputationChange = reps[index];
-
-            // Try both direct text and inner label
-            optionButtons[index].text = optionText;
-            var innerLabel = optionButtons[index].Q<Label>();
-            if (innerLabel != null)
+            if (!isConversationStarted)
             {
-                innerLabel.text = optionText;
-                Debug.Log($"[InnerLabel] Set button {index} label to: {optionText}");
+                isConversationStarted = true;
+                currentNPCLine = initialNPCResponses[Random.Range(0, initialNPCResponses.Length)];
+                npcResponseText.text = currentNPCLine;
+
+                Debug.Log($"[Start] NPC greeting: {currentNPCLine}");
+                StartCoroutine(HandleInitialDialogue(currentNPCLine));
+
             }
             else
             {
-                Debug.Log($"[ButtonText] Set button {index} text to: {optionText}");
-            }
-
-            ResetButtonCallback(optionButtons[index]);
-            optionButtons[index].clicked += () =>
-            {
-                reputation += reputationChange;
-                UpdateReputationUI();
-                hasTalkedToPlayer = true;
-                ProcessDialogue(optionText);
-            };
-        }
-
-        Debug.Log("Initial dialogue UI set.");
-    }
-
-
-
-    private void ResetButtonCallback(Button button)
-    {
-        // Remove all callbacks by replacing the button with a new one with the same name
-        // This is a workaround for lack of `clicked -= all` in UI Toolkit
-        var parent = button.parent;
-        if (parent == null) return;
-
-        var newButton = new Button();
-        newButton.name = button.name;
-        newButton.text = button.text;
-        newButton.style.flexGrow = 1;
-        parent.Insert(parent.IndexOf(button), newButton);
-        parent.Remove(button);
-
-        // Replace the reference in optionButtons array
-        for (int i = 0; i < optionButtons.Length; i++)
-        {
-            if (optionButtons[i].name == newButton.name)
-            {
-                optionButtons[i] = newButton;
-                break;
+                Debug.Log("[Re-entry] Continuing conversation...");
+                npcResponseText.text = currentNPCLine;
+                for (int i = 0; i < 3; i++)
+                {
+                    responseButtonTexts[i].text = currentOptions[i];
+                }
             }
         }
-    }
-
-
-
-    private async void ProcessDialogue(string playerResponse)
-    {
-        string npcRawResponse = await SendMessageToChatGPT(playerResponse);
-
-        (string npcResponse, string[] options, int[] reputations) = ParseAIResponse(npcRawResponse);
-        npcResponseLabel.text = npcResponse;
-
-        ShuffleOptions(options, reputations);
-        for (int i = 0; i < 3; i++)
+        else if (distance > interactionRadius && isPlayerInRange)
         {
-            optionButtons[i].text = options[i];
-            int delta = reputations[i]; // Store in closure
-            optionButtons[i].clicked -= null;
-            optionButtons[i].clicked += () =>
-            {
-                reputation += delta;
-                UpdateReputationUI();
-                ProcessDialogue(optionButtons[i].text);
-            };
+            isPlayerInRange = false;
+            dialogueUI.SetActive(false);
+            LockCursor();
         }
-
-        UpdateReputationUI();
-        isProcessing = false;
     }
-
-    private async Task GetAIResponse(string playerMessage)
+    private IEnumerator HandleInitialDialogue(string message)
     {
-        string npcRawResponse = await SendMessageToChatGPT(playerMessage);
-        (string npcResponse, string[] options, int[] reputations) = ParseAIResponse(npcRawResponse);
+        var task = SendMessageToChatGPT(message);
+        while (!task.IsCompleted) yield return null;
 
-        npcResponseLabel.text = npcResponse;
-        ShuffleOptions(options, reputations);
+        var result = task.Result;
+        currentNPCLine = result.Item1;
+        currentOptions = result.Item2;
 
         for (int i = 0; i < 3; i++)
         {
-            optionButtons[i].text = options[i];
-            int delta = reputations[i];
-            optionButtons[i].clicked -= null;
-            optionButtons[i].clicked += () =>
+            if (!string.IsNullOrWhiteSpace(currentOptions[i]))
+                responseButtonTexts[i].text = CleanOptionForButton(currentOptions[i]);
+            else
+                responseButtonTexts[i].text = "MISSING OPTION";
+        }
+
+        // ❌ Remove this line:
+        // reputation += optionReputationDeltas[index];
+
+        UpdateReputationText();
+    }
+
+
+    async void OnResponseClick(int index)
+    {
+        if (isProcessing) return;
+        isProcessing = true;
+
+        if (string.IsNullOrEmpty(currentOptions[index]))
+        {
+            Debug.LogWarning($"[Click] No valid option at index {index}");
+            isProcessing = false;
+            return;
+        }
+
+        string selected = currentOptions[index];
+        Debug.Log($"[Click] Player selected: {selected}");
+
+        reputation += optionReputationDeltas[index]; // ✅ Apply rep change based on clicked option
+        UpdateReputationText();
+
+        var result = await SendMessageToChatGPT(selected);
+        currentNPCLine = result.Item1;
+        npcResponseText.text = currentNPCLine;
+
+        currentOptions = result.Item2;
+        for (int i = 0; i < 3; i++)
+        {
+            if (!string.IsNullOrWhiteSpace(currentOptions[i]))
             {
-                reputation += delta;
-                UpdateReputationUI();
-                ProcessDialogue(optionButtons[i].text);
-            };
+                string displayText = CleanOptionForButton(currentOptions[i]);
+                responseButtonTexts[i].text = displayText;
+                Debug.Log($"[UI] Button {i}: '{displayText}'");
+            }
+            else
+            {
+                responseButtonTexts[i].text = "MISSING OPTION";
+                Debug.LogWarning($"[UI] Button {i}: MISSING");
+            }
         }
 
         isProcessing = false;
     }
 
-    private async Task<string> SendMessageToChatGPT(string message)
+
+    async Task<(string, string[], int)> SendMessageToChatGPT(string message)
     {
         using (HttpClient client = new HttpClient())
         {
@@ -234,67 +169,120 @@ public class NPCDialogueController : MonoBehaviour
                     new { role = "system", content = systemPrompt },
                     new { role = "user", content = message }
                 },
-                max_tokens = 200
+                max_tokens = 250
             };
 
             string json = JsonConvert.SerializeObject(requestBody);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PostAsync(OpenAiApiUrl, content);
-            string responseText = await response.Content.ReadAsStringAsync();
+            Debug.Log($"[API] Sending: {message}");
 
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var result = JsonConvert.DeserializeObject<ChatGPTResponse>(responseText);
-                return result.choices[0].message.content;
-            }
+                HttpResponseMessage response = await client.PostAsync(OpenAiApiUrl, content);
+                string jsonResult = await response.Content.ReadAsStringAsync();
 
-            Debug.LogError($"ChatGPT error: {response.StatusCode} - {responseText}");
-            return "Sorry, I’m having trouble responding.";
+                if (response.IsSuccessStatusCode)
+                {
+                    var data = JsonConvert.DeserializeObject<ChatGPTResponse>(jsonResult);
+                    string reply = data.choices[0].message.content.Trim();
+
+                    Debug.Log($"[API Response] Raw: {reply}");
+
+                    return ParseChatGPTResponse(reply);
+                }
+                else
+                {
+                    Debug.LogError($"[API] Failed: {response.StatusCode}");
+                    return ("Error: Failed API call", new string[3], 0);
+                }
+            }
+            catch (HttpRequestException e)
+            {
+                Debug.LogError($"[API] Exception: {e.Message}");
+                return ("Error: Exception", new string[3], 0);
+            }
         }
     }
 
-    private (string, string[], int[]) ParseAIResponse(string response)
+    (string, string[], int) ParseChatGPTResponse(string fullResponse)
     {
-        string[] lines = response.Split('\n').Where(line => !string.IsNullOrWhiteSpace(line)).ToArray();
-
-        if (lines.Length < 4) return ("Error: AI didn't return enough lines", new[] { "Option A", "Option B", "Option C" }, new[] { 0, 0, 0 });
-
-        string npcLine = lines[0];
+        string npcLine = "";
         string[] options = new string[3];
-        int[] reputations = new int[3];
+        int repDelta = 0;
 
-        for (int i = 0; i < 3; i++)
+        // Handle case where everything is on one line
+        if (fullResponse.Contains("OPTIONS:"))
         {
-            string line = lines[i + 1].Trim();
-            if (line.EndsWith("+1"))
+            string[] parts = fullResponse.Split(new[] { "OPTIONS:" }, System.StringSplitOptions.None);
+            npcLine = parts[0].Trim();
+
+            string optionsText = parts.Length > 1 ? parts[1].Trim() : "";
+            string[] rawOptions = optionsText.Split(new[] { "(+1)", "(-1)" }, System.StringSplitOptions.None);
+
+            List<string> parsedOptions = new List<string>();
+            int currentIndex = 0;
+
+            foreach (string chunk in rawOptions)
             {
-                options[i] = line.Replace("+1", "").Trim();
-                reputations[i] = 1;
+                string clean = chunk.TrimStart('-', ' ', '\n', '\r').Trim();
+                if (string.IsNullOrWhiteSpace(clean)) continue;
+
+                string tag = optionsText.Contains(clean + " (+1)") ? "(+1)" : "(-1)";
+                parsedOptions.Add($"{clean} {tag}");
+
+                if (tag == "(+1)")
+                    repDelta = 1;
+
+                currentIndex++;
+                if (currentIndex == 3) break;
             }
-            else if (line.EndsWith("-1"))
+
+            for (int i = 0; i < 3; i++)
             {
-                options[i] = line.Replace("-1", "").Trim();
-                reputations[i] = -1;
+                options[i] = i < parsedOptions.Count ? parsedOptions[i] : "Option missing (-1)";
             }
-            else
+
+            Debug.Log($"[Parsed] NPC: {npcLine}, Reputation Change: {repDelta}");
+            Debug.Log($"[Options] 1: {options[0]} | 2: {options[1]} | 3: {options[2]}");
+
+            optionReputationDeltas = new int[3]; // reset
+            for (int i = 0; i < 3; i++)
             {
-                options[i] = line;
-                reputations[i] = 0;
+                if (i < parsedOptions.Count)
+                {
+                    options[i] = parsedOptions[i];
+                    optionReputationDeltas[i] = parsedOptions[i].Contains("(+1)") ? 1 : -1;
+                }
+                else
+                {
+                    options[i] = "Option missing (-1)";
+                    optionReputationDeltas[i] = -1;
+                }
             }
+            return (npcLine, options, 0); // We don’t assign global rep here anymore
         }
 
-        return (npcLine, options, reputations);
+        // If no OPTIONS section, treat whole message as error
+        Debug.LogWarning("[Parse] No OPTIONS section found. Returning full message as NPC line.");
+        return (fullResponse.Trim(), new[] { "Option missing (-1)", "Option missing (-1)", "Option missing (-1)" }, 0);
     }
 
-    private void ShuffleOptions(string[] options, int[] reps)
+    void UpdateReputationText()
     {
-        for (int i = 0; i < options.Length; i++)
-        {
-            int rnd = Random.Range(i, options.Length);
-            (options[i], options[rnd]) = (options[rnd], options[i]);
-            (reps[i], reps[rnd]) = (reps[rnd], reps[i]);
-        }
+        reputationText.text = $"Reputation: {reputation}";
+    }
+
+    void UnlockCursor()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+    }
+
+    void LockCursor()
+    {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     [System.Serializable]
@@ -312,7 +300,35 @@ public class NPCDialogueController : MonoBehaviour
     [System.Serializable]
     private class Message
     {
-        public string content;
         public string role;
+        public string content;
     }
+    private string CleanOptionForButton(string option)
+    {
+        // Remove (+1) or (-1)
+        option = option.Replace("(+1)", "").Replace("(-1)", "").Trim();
+
+        // Remove square brackets
+        if (option.StartsWith("[") && option.EndsWith("]"))
+        {
+            option = option.Substring(1, option.Length - 2).Trim();
+        }
+
+        // Remove surrounding quotes
+        if ((option.StartsWith("\"") && option.EndsWith("\"")) ||
+            (option.StartsWith("'") && option.EndsWith("'")))
+        {
+            option = option.Substring(1, option.Length - 2).Trim();
+        }
+
+        // Remove leading dash
+        if (option.StartsWith("- "))
+        {
+            option = option.Substring(2).Trim();
+        }
+
+        return option;
+    }
+
+
 }
