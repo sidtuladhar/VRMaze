@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UIElements;
+using System.Collections;
 
 public class DialogueController : MonoBehaviour
 {
@@ -16,12 +17,15 @@ public class DialogueController : MonoBehaviour
     public Transform player;
     public Transform npc;
     public float interactionRadius = 5f;
+    public float typingSpeed = 0.05f;
 
     private VisualElement root;
     private Label npcResponseLabel;
     private Button optionOneButton;
     private Button optionTwoButton;
     private Button optionThreeButton;
+
+    private bool isTyping = false;
 
     void Start()
     {
@@ -50,23 +54,38 @@ public class DialogueController : MonoBehaviour
         Vector3 directionToPlayer = player.position - npc.position;
         directionToPlayer.y = 0;
 
-        if (distance <= interactionRadius)
+        if (distance <= interactionRadius && !isTyping)
         {
             uiDocument.gameObject.SetActive(true);
             UnlockCursor();
 
-            if (directionToPlayer != Vector3.zero) 
+            if (directionToPlayer != Vector3.zero)
             {
                 // Rotate NPC to face player
                 Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
                 npc.rotation = Quaternion.Slerp(npc.rotation, targetRotation, Time.deltaTime * 5f);
             }
+
         }
         else if (distance > interactionRadius)
         {
             uiDocument.gameObject.SetActive(false);
             LockCursor();
         }
+    }
+
+    IEnumerator TypeNPCText()
+    {
+        isTyping = true;
+        npcResponseLabel.text = ""; // Clear the label before typing
+
+        foreach (char letter in npcResponseText.ToCharArray())
+        {
+            npcResponseLabel.text += letter;
+            yield return new WaitForSeconds(typingSpeed);
+        }
+
+        isTyping = false; // Typing is finished
     }
 
     void UnlockCursor()
