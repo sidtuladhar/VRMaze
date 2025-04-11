@@ -23,8 +23,6 @@ public class DialogueController : MonoBehaviour
     private Button optionTwoButton;
     private Button optionThreeButton;
 
-    private bool isPlayerInRange = false;
-
     void Start()
     {
         // Access UI root
@@ -50,16 +48,15 @@ public class DialogueController : MonoBehaviour
     {
         float distance = Vector3.Distance(player.position, npc.position);
 
-        if (distance <= interactionRadius && !isPlayerInRange)
+        if (distance <= interactionRadius)
         {
-            isPlayerInRange = true;
             uiDocument.gameObject.SetActive(true);
             UnlockCursor();
         }
-        else if (distance > interactionRadius && isPlayerInRange)
+        else if (distance > interactionRadius)
         {
-            isPlayerInRange = false;
             uiDocument.gameObject.SetActive(false);
+            LockCursor();
         }
     }
 
@@ -67,6 +64,12 @@ public class DialogueController : MonoBehaviour
     {
         UnityEngine.Cursor.lockState = CursorLockMode.None;
         UnityEngine.Cursor.visible = true;
+    }
+
+    private void LockCursor()
+    {
+        UnityEngine.Cursor.lockState = CursorLockMode.Locked;
+        UnityEngine.Cursor.visible = false;
     }
 
 }
