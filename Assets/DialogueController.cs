@@ -47,11 +47,20 @@ public class DialogueController : MonoBehaviour
     void Update()
     {
         float distance = Vector3.Distance(player.position, npc.position);
+        Vector3 directionToPlayer = player.position - npc.position;
+        directionToPlayer.y = 0;
 
         if (distance <= interactionRadius)
         {
             uiDocument.gameObject.SetActive(true);
             UnlockCursor();
+
+            if (directionToPlayer != Vector3.zero) 
+            {
+                // Rotate NPC to face player
+                Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+                npc.rotation = Quaternion.Slerp(npc.rotation, targetRotation, Time.deltaTime * 5f);
+            }
         }
         else if (distance > interactionRadius)
         {
