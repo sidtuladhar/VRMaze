@@ -85,7 +85,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 486d495319d9e4d8a8a635df9f986e80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectionOffset: {x: 0, y: 0, z: -5}
+  connectionOffset: {x: 0, y: 0, z: -5.5}
   DeadEndPrefab: {fileID: 3688944849429250427}
 --- !u!54 &9026238810319080031
 Rigidbody:
@@ -133,8 +133,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 20, y: 10, z: 10.5}
-  m_Center: {x: 0, y: 5, z: 0.25}
+  m_Size: {x: 20, y: 10, z: 11}
+  m_Center: {x: 0, y: 5, z: 0}
 --- !u!1001 &138897940079301170
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -161,7 +161,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7914410071268655054, guid: da45cc7addcde4624ba0d388fbbbb16e, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 7914410071268655054, guid: da45cc7addcde4624ba0d388fbbbb16e, type: 3}
       propertyPath: m_LocalRotation.w
@@ -364,7 +364,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5191729758599461264, guid: c7eafffbf887c454b968c195c3835abf, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0.5
       objectReference: {fileID: 0}
     - target: {fileID: 5191729758599461264, guid: c7eafffbf887c454b968c195c3835abf, type: 3}
       propertyPath: m_LocalRotation.w
