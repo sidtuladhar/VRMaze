@@ -99,11 +99,13 @@ public class MazeGenerator : MonoBehaviour
                 }
 
                 // Find a connection point for the enemy spawn
-                while (enemySpawnConnection.DeadEndPrefab.activeSelf == true && attempts < maxAttempts)
+                float distanceToOrigin = enemySpawnConnection.transform.position.magnitude;
+                while (enemySpawnConnection.DeadEndPrefab.activeSelf == true && distanceToOrigin < 5 && attempts < maxAttempts)
                 {
                     enemySpawnConnection = randomConnections[Random.Range(0, randomConnections.Length)];
                     randomChunk = placedChunks[Random.Range(0, placedChunks.Count)];
                     randomConnections = randomChunk.GetComponentsInChildren<ConnectionPoint>();
+                    distanceToOrigin = enemySpawnConnection.transform.position.magnitude;
                     attempts++;
                 }
                 SpawnPlayer();
