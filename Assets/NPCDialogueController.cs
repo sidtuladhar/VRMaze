@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections;
 
+
 public class NPCDialogueController : MonoBehaviour
 {
     [Header("UI Elements")]
@@ -18,12 +19,12 @@ public class NPCDialogueController : MonoBehaviour
     public TMP_Text[] responseButtonTexts;
 
     [Header("NPC Settings")]
-    public float interactionRadius = 5f;
+    public float interactionRadius = 10f;
     public string systemPrompt;
     public string[] initialNPCResponses;
+    public float rotationSpeed = 180f;
 
     private Transform player;
-    private bool isPlayerInRange = false;
     private bool isConversationStarted = false;
     private bool isProcessing = false;
     private int reputation = 10;
@@ -55,9 +56,18 @@ public class NPCDialogueController : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        if (distance <= interactionRadius && !isPlayerInRange)
+
+        if (distance <= interactionRadius)
         {
-            isPlayerInRange = true;
+            Vector3 directionToPlayer = player.position - transform.position;
+            directionToPlayer.y = 0; // Keep the rotation horizontal (don't tilt up/down)
+
+            if (directionToPlayer != Vector3.zero)
+            {
+                Quaternion targetRotation = Quaternion.LookRotation(directionToPlayer);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+            }
+
             UnlockCursor();
             dialogueUI.SetActive(true);
 
@@ -81,9 +91,8 @@ public class NPCDialogueController : MonoBehaviour
                 }
             }
         }
-        else if (distance > interactionRadius && isPlayerInRange)
+        else if (distance > interactionRadius)
         {
-            isPlayerInRange = false;
             dialogueUI.SetActive(false);
             LockCursor();
         }
