@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using TMPro;
 using UnityEngine.UI;
 using System.Net.Http;
@@ -7,6 +8,24 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections;
+
+// Can be a class or struct. Serializable might be useful if you want to save/load history.
+[Serializable]
+public class ChatMessage
+{
+    [JsonProperty("role")]
+    public string Role { get; set; }
+
+    [JsonProperty("content")]
+    public string Content { get; set; }
+
+    // Constructor for easy creation
+    public ChatMessage(string role, string content)
+    {
+        Role = role;
+        Content = content;
+    }
+}
 
 
 public class NPCDialogueController : MonoBehaviour
@@ -19,10 +38,13 @@ public class NPCDialogueController : MonoBehaviour
     public TMP_Text[] responseButtonTexts;
 
     [Header("NPC Settings")]
-    public float interactionRadius = 10f;
+    public float interactionRadius = 5f;
     public string systemPrompt;
     public string[] initialNPCResponses;
+
     public float rotationSpeed = 180f;
+
+    public List<ChatMessage> conversationHistory = new List<ChatMessage>();
 
     private Transform player;
     private bool isConversationStarted = false;
@@ -46,7 +68,7 @@ public class NPCDialogueController : MonoBehaviour
             int index = i;
             responseButtons[i].onClick.AddListener(() => OnResponseClick(index));
         }
-
+        InitializeConversation();
         UpdateReputationText();
     }
 
@@ -56,9 +78,9 @@ public class NPCDialogueController : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-
         if (distance <= interactionRadius)
         {
+
             Vector3 directionToPlayer = player.position - transform.position;
             directionToPlayer.y = 0; // Keep the rotation horizontal (don't tilt up/down)
 
@@ -74,7 +96,7 @@ public class NPCDialogueController : MonoBehaviour
             if (!isConversationStarted)
             {
                 isConversationStarted = true;
-                currentNPCLine = initialNPCResponses[Random.Range(0, initialNPCResponses.Length)];
+                currentNPCLine = initialNPCResponses[UnityEngine.Random.Range(0, initialNPCResponses.Length)];
                 npcResponseText.text = currentNPCLine;
 
                 Debug.Log($"[Start] NPC greeting: {currentNPCLine}");
@@ -83,7 +105,6 @@ public class NPCDialogueController : MonoBehaviour
             }
             else
             {
-                Debug.Log("[Re-entry] Continuing conversation...");
                 npcResponseText.text = currentNPCLine;
                 for (int i = 0; i < 3; i++)
                 {
@@ -114,9 +135,6 @@ public class NPCDialogueController : MonoBehaviour
                 responseButtonTexts[i].text = "MISSING OPTION";
         }
 
-        // ❌ Remove this line:
-        // reputation += optionReputationDeltas[index];
-
         UpdateReputationText();
     }
 
@@ -135,6 +153,7 @@ public class NPCDialogueController : MonoBehaviour
 
         string selected = currentOptions[index];
         Debug.Log($"[Click] Player selected: {selected}");
+        conversationHistory.Add(new ChatMessage("user", selected));
 
         reputation += optionReputationDeltas[index]; // ✅ Apply rep change based on clicked option
         UpdateReputationText();
@@ -172,16 +191,62 @@ public class NPCDialogueController : MonoBehaviour
 
             var requestBody = new
             {
-                model = "gpt-4o",
-                messages = new[]
+                model = "gpt-4o-mini",
+                messages = conversationHistory,
+                max_tokens = 250,
+                response_format = new
                 {
-                    new { role = "system", content = systemPrompt },
-                    new { role = "user", content = message }
-                },
-                max_tokens = 250
+                    type = "json_schema",
+                    json_schema = new
+                    {
+                        name = "dialogue_options_with_reputation",
+                        description = "Generates NPC dialgoue and three short player dialogue options, each with text and a +/- 1 reputation change.",
+                        schema = new
+                        {
+                            type = "object",
+                            properties = new
+                            {
+                                npc_dialogue = new
+                                {
+                                    type = "string",
+                                    description = "The NPC's dialogue."
+                                },
+                                dialogue_options = new
+                                {
+                                    type = "array",
+                                    description = "A list containing exactly three dialogue options.",
+                                    items = new
+                                    {
+                                        type = "object",
+                                        properties = new
+                                        {
+                                            option_text = new
+                                            {
+                                                type = "string",
+                                                description = "The text of the dialogue option."
+                                            },
+                                            reputation_change = new
+                                            {
+                                                type = "integer",
+                                                description = "Reputation change: +1 or -1.",
+                                                @enum = new int[] { 1, -1 }
+                                            }
+                                        },
+                                        required = new string[] { "option_text", "reputation_change" }, // Constraint: Require both inside item
+                                        additionalProperties = false // Constraint: Disallow extra fields inside item
+                                    }
+                                }
+                            },
+                            required = new string[] { "npc_dialogue", "dialogue_options" },
+                            additionalProperties = false
+                        },
+                        strict = true // Constraint: Enforce schema strictly
+                    }
+                }
             };
 
             string json = JsonConvert.SerializeObject(requestBody);
+            Debug.Log(json);
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
             Debug.Log($"[API] Sending: {message}");
@@ -202,7 +267,7 @@ public class NPCDialogueController : MonoBehaviour
                 }
                 else
                 {
-                    Debug.LogError($"[API] Failed: {response.StatusCode}");
+                    Debug.LogError($"[API] Failed: {response}");
                     return ("Error: Failed API call", new string[3], 0);
                 }
             }
@@ -217,64 +282,78 @@ public class NPCDialogueController : MonoBehaviour
     (string, string[], int) ParseChatGPTResponse(string fullResponse)
     {
         string npcLine = "";
-        string[] options = new string[3];
+        string[] options = new string[3] { // Default values
+            "Option Error (-1)",
+            "Option Error (-1)",
+            "Option Error (-1)"
+        };
         int repDelta = 0;
 
-        // Handle case where everything is on one line
-        if (fullResponse.Contains("OPTIONS:"))
+        optionReputationDeltas = new int[3] { -1, -1, -1 };
+
+        
+
+        try
         {
-            string[] parts = fullResponse.Split(new[] { "OPTIONS:" }, System.StringSplitOptions.None);
-            npcLine = parts[0].Trim();
-
-            string optionsText = parts.Length > 1 ? parts[1].Trim() : "";
-            string[] rawOptions = optionsText.Split(new[] { "(+1)", "(-1)" }, System.StringSplitOptions.None);
-
-            List<string> parsedOptions = new List<string>();
-            int currentIndex = 0;
-
-            foreach (string chunk in rawOptions)
+            // 1. Define an anonymous type matching the expected JSON structure
+            var definition = new
             {
-                string clean = chunk.TrimStart('-', ' ', '\n', '\r').Trim();
-                if (string.IsNullOrWhiteSpace(clean)) continue;
-
-                string tag = optionsText.Contains(clean + " (+1)") ? "(+1)" : "(-1)";
-                parsedOptions.Add($"{clean} {tag}");
-
-                if (tag == "(+1)")
-                    repDelta = 1;
-
-                currentIndex++;
-                if (currentIndex == 3) break;
-            }
-
-            for (int i = 0; i < 3; i++)
-            {
-                options[i] = i < parsedOptions.Count ? parsedOptions[i] : "Option missing (-1)";
-            }
-
-            Debug.Log($"[Parsed] NPC: {npcLine}, Reputation Change: {repDelta}");
-            Debug.Log($"[Options] 1: {options[0]} | 2: {options[1]} | 3: {options[2]}");
-
-            optionReputationDeltas = new int[3]; // reset
-            for (int i = 0; i < 3; i++)
-            {
-                if (i < parsedOptions.Count)
-                {
-                    options[i] = parsedOptions[i];
-                    optionReputationDeltas[i] = parsedOptions[i].Contains("(+1)") ? 1 : -1;
+                npc_dialogue = "",
+                dialogue_options = new[] { // Array of anonymous objects
+                    new {
+                        option_text = "",
+                        reputation_change = 0
+                    }
                 }
-                else
+            };
+
+            // 2. Attempt to deserialize the JSON string
+            var parsedJson = JsonConvert.DeserializeAnonymousType(fullResponse, definition);
+
+            // 3. Process the parsed data if successful
+            if (parsedJson != null && parsedJson.dialogue_options != null && parsedJson.dialogue_options.Length > 0)
+            {
+                npcLine = parsedJson.npc_dialogue ?? "NPC dialogue missing in JSON.";
+
+                // Determine single repDelta based on the *first* option (mimicking old logic)
+                repDelta = (parsedJson.dialogue_options[0].reputation_change > 0) ? 1 : 0; // Or set to -1 if change is -1? Original code was ambiguous. Let's do 1 if positive, else 0.
+
+                // Populate the 'options' array and the side-effect 'optionReputationDeltas' array
+                for (int i = 0; i < options.Length; i++)
                 {
-                    options[i] = "Option missing (-1)";
-                    optionReputationDeltas[i] = -1;
+                    if (i < parsedJson.dialogue_options.Length)
+                    {
+                        string text = parsedJson.dialogue_options[i].option_text ?? "Text missing";
+                        int repChange = parsedJson.dialogue_options[i].reputation_change;
+
+                        // Format option string to match old output style
+                        options[i] = $"{text}";
+
+                        // Populate side-effect array
+                        optionReputationDeltas[i] = repChange;
+                    }
+                    else
+                    {
+                        optionReputationDeltas[i] = -1; // Default rep in side-effect array
+                        Debug.Log($"  - Option {i + 1}: Using default '{options[i]}' (Side effect Rep: {optionReputationDeltas[i]})");
+                    }
                 }
+                conversationHistory.Add(new ChatMessage("assistant", npcLine));
             }
-            return (npcLine, options, 0); // We don’t assign global rep here anymore
+            else
+            {
+                Debug.LogWarning("[ParseChatGPTResponse_Replicated] JSON parsed but 'dialogue_options' array is missing, null, or empty.");
+            }
+        }
+        catch (JsonException jsonEx)
+        {
+            Debug.LogError($"[ParseChatGPTResponse_Replicated] Failed to parse JSON: {jsonEx.Message}");
+            Debug.LogError($"[ParseChatGPTResponse_Replicated] Input string: {fullResponse}");
         }
 
-        // If no OPTIONS section, treat whole message as error
-        Debug.LogWarning("[Parse] No OPTIONS section found. Returning full message as NPC line.");
-        return (fullResponse.Trim(), new[] { "Option missing (-1)", "Option missing (-1)", "Option missing (-1)" }, 0);
+
+
+        return (npcLine, options, repDelta);
     }
 
     void UpdateReputationText()
@@ -339,5 +418,10 @@ public class NPCDialogueController : MonoBehaviour
         return option;
     }
 
-
+    void InitializeConversation()
+    {
+        conversationHistory.Clear();
+        conversationHistory.Add(new ChatMessage("system", systemPrompt));
+        conversationHistory.Add(new ChatMessage("user", "Hello?"));
+    }
 }
