@@ -49,7 +49,7 @@ public class NPCDialogueController : MonoBehaviour
     private Transform player;
     private bool isConversationStarted = false;
     private bool isProcessing = false;
-    private int reputation = 10;
+    private int reputation = 0;
     private int[] optionReputationDeltas = new int[3]; // +1, -1, -1, etc.
 
     private string currentNPCLine = "";
@@ -160,7 +160,7 @@ public class NPCDialogueController : MonoBehaviour
 
         var result = await SendMessageToChatGPT(selected);
         currentNPCLine = result.Item1;
-        npcResponseText.text = currentNPCLine;
+        npcResponseText.text = result.Item1;
 
         currentOptions = result.Item2;
         for (int i = 0; i < 3; i++)
@@ -193,14 +193,13 @@ public class NPCDialogueController : MonoBehaviour
             {
                 model = "gpt-4o-mini",
                 messages = conversationHistory,
-                max_tokens = 250,
                 response_format = new
                 {
                     type = "json_schema",
                     json_schema = new
                     {
                         name = "dialogue_options_with_reputation",
-                        description = "Generates NPC dialgoue and three short player dialogue options, each with text and a +/- 1 reputation change.",
+                        description = "Generates personalized NPC dialgoue and three short player dialogue options, each with text and a +/- 1 reputation change. The options should be morally difficult.",
                         schema = new
                         {
                             type = "object",
@@ -261,7 +260,7 @@ public class NPCDialogueController : MonoBehaviour
                     var data = JsonConvert.DeserializeObject<ChatGPTResponse>(jsonResult);
                     string reply = data.choices[0].message.content.Trim();
 
-                    Debug.Log($"[API Response] Raw: {reply}");
+                    Debug.Log($"[API Response] Raw: {data}");
 
                     return ParseChatGPTResponse(reply);
                 }
@@ -281,12 +280,8 @@ public class NPCDialogueController : MonoBehaviour
 
     (string, string[], int) ParseChatGPTResponse(string fullResponse)
     {
-        string npcLine = "";
-        string[] options = new string[3] { // Default values
-            "Option Error (-1)",
-            "Option Error (-1)",
-            "Option Error (-1)"
-        };
+        string npcLine = npcResponseText.text; // Default value
+        string[] options = currentOptions; // Default value 
         int repDelta = 0;
 
         optionReputationDeltas = new int[3] { -1, -1, -1 };
@@ -311,7 +306,7 @@ public class NPCDialogueController : MonoBehaviour
             var parsedJson = JsonConvert.DeserializeAnonymousType(fullResponse, definition);
 
             // 3. Process the parsed data if successful
-            if (parsedJson != null && parsedJson.dialogue_options != null && parsedJson.dialogue_options.Length > 0)
+            if (parsedJson != null && parsedJson.dialogue_options != null && parsedJson.dialogue_options.Length > 0 && parsedJson.npc_dialogue != null)
             {
                 npcLine = parsedJson.npc_dialogue ?? "NPC dialogue missing in JSON.";
 
@@ -352,7 +347,7 @@ public class NPCDialogueController : MonoBehaviour
         }
 
 
-
+        Debug.LogError("npcLine: " + npcLine);
         return (npcLine, options, repDelta);
     }
 
