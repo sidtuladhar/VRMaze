@@ -4157,6 +4157,10 @@ MonoBehaviour:
     and scroll on Twitter. '
   initialNPCResponses:
   - '?'
+  interactions: 0
+  cooldownTime: 30
+  maxAttempts: 10
+  maxReputation: 5
   rotationSpeed: 180
   conversationHistory: []
 --- !u!4 &8844178499814403853 stripped

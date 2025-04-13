@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections;
+using System.Threading;
 
 // Can be a class or struct. Serializable might be useful if you want to save/load history.
 [Serializable]
@@ -61,6 +62,12 @@ public class NPCDialogueController : MonoBehaviour
     public string[] initialNPCResponses;
     public int interactions = 0;
 
+    // cool down for 2 mins, 10 to win, 10 attempts
+    public float cooldownTime = 120f;
+    private bool isOnCooldown = false;
+
+    public int maxAttempts = 10;
+    public int maxReputation = 10;
 
     public float rotationSpeed = 180f;
 
@@ -78,6 +85,15 @@ public class NPCDialogueController : MonoBehaviour
 
     private const string OpenAiApiKey = ""; // Add key
     private const string OpenAiApiUrl = "https://api.openai.com/v1/chat/completions";
+    private static readonly HttpClient client = InitializeHttpClient();
+
+    private static HttpClient InitializeHttpClient()
+    {
+        var client = new HttpClient();
+        client.DefaultRequestHeaders.Clear();
+        client.DefaultRequestHeaders.Add("Authorization", $"Bearer {OpenAiApiKey}");
+        return client;
+    }
 
     void Start()
     {
@@ -115,11 +131,22 @@ public class NPCDialogueController : MonoBehaviour
 
             dialogueUI.SetActive(true);
 
-            npcResponseText.text = currentNPCLine;
-            for (int i = 0; i < 3; i++)
+            if (reputation != maxReputation && interactions < maxAttempts && !isOnCooldown)
             {
-                responseButtonTexts[i].text = currentOptions[i];
+                npcResponseText.text = currentNPCLine;
+                for (int i = 0; i < 3; i++)
+                {
+                    responseButtonTexts[i].text = currentOptions[i];
+                }
             }
+            else
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    responseButtons[i].gameObject.SetActive(false);
+                }
+            }
+
             isInteracting = true;
         }
         else if (isInteracting && distance > interactionRadius)
@@ -149,9 +176,9 @@ public class NPCDialogueController : MonoBehaviour
         UpdateReputationText();
     }
 
-
     async void OnResponseClick(int index)
     {
+
         if (isProcessing) return;
         isProcessing = true;
 
@@ -163,11 +190,42 @@ public class NPCDialogueController : MonoBehaviour
         }
 
         string selected = currentOptions[index];
-        Debug.Log($"[Click] Player selected: {selected}");
         conversationHistory.Add(new ChatMessage("user", selected));
 
         reputation += optionReputationDeltas[index]; // ✅ Apply rep change based on clicked option
         UpdateReputationText();
+        interactions++;
+
+        if (reputation == maxReputation && GameManager.Instance.studentsHelped < GameManager.Instance.studentsToHelp)
+        {
+            GameManager.Instance.studentsHelped++;
+            npcResponseText.text = "Glad we had a chance to talk. You know, there are other students here who might have some interesting things to say...";
+            for (int i = 0; i < 3; i++)
+            {
+                responseButtons[i].gameObject.SetActive(false);
+            }
+            return;
+        }
+        else if (reputation == maxReputation && GameManager.Instance.studentsHelped == GameManager.Instance.studentsToHelp)
+        {
+            npcResponseText.text = "Thanks for spending time to talk think you should leave now. The exit is over there, and it's safe for you to go.";
+            for (int i = 0; i < 3; i++)
+            {
+                responseButtons[i].gameObject.SetActive(false);
+            }
+            return;
+        }
+        else if (interactions == maxAttempts)
+        {
+            npcResponseText.text = "Agh you're annoying me... I need a break from you. Go bother someone else.";
+            for (int i = 0; i < 3; i++)
+            {
+                responseButtons[i].gameObject.SetActive(false);
+            }
+            isOnCooldown = true;
+            StartCoroutine(InteractionCooldown());
+            return;
+        }
 
         var result = await SendMessageToChatGPT(selected);
         currentNPCLine = result.Item1;
@@ -192,98 +250,93 @@ public class NPCDialogueController : MonoBehaviour
 
     async Task<(string, string[], int)> SendMessageToChatGPT(string message)
     {
-        using (HttpClient client = new HttpClient())
+        var requestBody = new
         {
-            client.DefaultRequestHeaders.Clear();
-            client.DefaultRequestHeaders.Add("Authorization", $"Bearer {OpenAiApiKey}");
-
-            var requestBody = new
+            model = "gpt-4o-mini",
+            messages = conversationHistory,
+            response_format = new
             {
-                model = "gpt-4o-mini",
-                messages = conversationHistory,
-                response_format = new
+                type = "json_schema",
+                json_schema = new
                 {
-                    type = "json_schema",
-                    json_schema = new
+                    name = "dialogue_options_with_reputation",
+                    description = "Generates personalized NPC dialgoue and three short player dialogue options, each with text and a +/- 1 reputation change. The options should be morally difficult.",
+                    schema = new
                     {
-                        name = "dialogue_options_with_reputation",
-                        description = "Generates personalized NPC dialgoue and three short player dialogue options, each with text and a +/- 1 reputation change. The options should be morally difficult.",
-                        schema = new
+                        type = "object",
+                        properties = new
                         {
-                            type = "object",
-                            properties = new
+                            npc_dialogue = new
                             {
-                                npc_dialogue = new
-                                {
-                                    type = "string",
-                                    description = "The NPC's dialogue."
-                                },
-                                dialogue_options = new
-                                {
-                                    type = "array",
-                                    description = "A list containing exactly three dialogue options.",
-                                    items = new
-                                    {
-                                        type = "object",
-                                        properties = new
-                                        {
-                                            option_text = new
-                                            {
-                                                type = "string",
-                                                description = "The text of the dialogue option."
-                                            },
-                                            reputation_change = new
-                                            {
-                                                type = "integer",
-                                                description = "Reputation change: +1 or -1.",
-                                                @enum = new int[] { 1, -1 }
-                                            }
-                                        },
-                                        required = new string[] { "option_text", "reputation_change" }, // Constraint: Require both inside item
-                                        additionalProperties = false // Constraint: Disallow extra fields inside item
-                                    }
-                                }
+                                type = "string",
+                                description = "The NPC's dialogue."
                             },
-                            required = new string[] { "npc_dialogue", "dialogue_options" },
-                            additionalProperties = false
+                            dialogue_options = new
+                            {
+                                type = "array",
+                                description = "A list containing exactly three dialogue options.",
+                                items = new
+                                {
+                                    type = "object",
+                                    properties = new
+                                    {
+                                        option_text = new
+                                        {
+                                            type = "string",
+                                            description = "The text of the dialogue option."
+                                        },
+                                        reputation_change = new
+                                        {
+                                            type = "integer",
+                                            description = "Reputation change: +1 or -1.",
+                                            @enum = new int[] { 1, -1 }
+                                        }
+                                    },
+                                    required = new string[] { "option_text", "reputation_change" }, // Constraint: Require both inside item
+                                    additionalProperties = false // Constraint: Disallow extra fields inside item
+                                }
+                            }
                         },
-                        strict = true // Constraint: Enforce schema strictly
-                    }
+                        required = new string[] { "npc_dialogue", "dialogue_options" },
+                        additionalProperties = false
+                    },
+                    strict = true // Constraint: Enforce schema strictly
                 }
-            };
+            }
+        };
 
-            string json = JsonConvert.SerializeObject(requestBody);
-            Debug.Log(json);
+        string json = JsonConvert.SerializeObject(requestBody);
+
             var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            Debug.Log($"[API] Sending: {message}");
-
-            try
+            HttpResponseMessage response = null;
+            for (int attempt = 1; attempt <= 3; attempt++)
             {
-                HttpResponseMessage response = await client.PostAsync(OpenAiApiUrl, content);
-                string jsonResult = await response.Content.ReadAsStringAsync();
-
-                if (response.IsSuccessStatusCode)
+                using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10)))
                 {
-                    var data = JsonConvert.DeserializeObject<ChatGPTResponse>(jsonResult);
-                    string reply = data.choices[0].message.content.Trim();
+                    try
+                    {
+                        response = await client.PostAsync(OpenAiApiUrl, content, cts.Token);
+                        string responseBody = await response.Content.ReadAsStringAsync();
 
-                    Debug.Log($"[API Response] Raw: {data}");
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var data = JsonConvert.DeserializeObject<ChatGPTResponse>(responseBody);
+                            string reply = data.choices[0].message.content.Trim();
 
-                    return ParseChatGPTResponse(reply);
+                            Debug.Log($"[API Response] Raw: {reply}");
+                            return ParseChatGPTResponse(reply);
+                        }
+                    }
+                    catch (HttpRequestException e)
+                    {
+                        Debug.LogError($"[API] Exception: {e.Message}");
+                        return ("Error: Exception", new string[3], 0);
+                    }
                 }
-                else
-                {
-                    Debug.LogError($"[API] Failed: {response}");
-                    return ("Error: Failed API call", new string[3], 0);
-                }
+                Debug.Log("retrying API");
             }
-            catch (HttpRequestException e)
-            {
-                Debug.LogError($"[API] Exception: {e.Message}");
-                return ("Error: Exception", new string[3], 0);
-            }
-        }
+        return ("Everything broke", new string[3], 0);
     }
 
     (string, string[], int) ParseChatGPTResponse(string fullResponse)
@@ -381,6 +434,21 @@ public class NPCDialogueController : MonoBehaviour
         currentNPCLine = initialNPCResponses[UnityEngine.Random.Range(0, initialNPCResponses.Length)];
         npcResponseText.text = currentNPCLine;
         StartCoroutine(HandleInitialDialogue(currentNPCLine));
+    }
+    private System.Collections.IEnumerator InteractionCooldown()
+    {
+        yield return new WaitForSeconds(cooldownTime);
 
+        isOnCooldown = false;
+        interactions = 0;
+        reputation = 0;
+        UpdateReputationText();
+        conversationHistory.Clear();
+        InitializeConversation();
+        for (int i = 0; i < responseButtons.Length; i++)
+        {
+            responseButtons[i].gameObject.SetActive(true);
+        }
+        Debug.Log("NPC cooldown finished. Interaction allowed.");
     }
 }
