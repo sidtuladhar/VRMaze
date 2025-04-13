@@ -22,8 +22,6 @@ public class MazeGenerator : MonoBehaviour
     private List<ConnectionPoint> openConnections = new List<ConnectionPoint>();
     public List<GameObject> placedChunks = new List<GameObject>();
 
-    [SerializeField] private GameObject batteryPrefab;
-    [SerializeField] private int batteriesPerMaze = 3;
     private GameObject enemy;
 
     void Start()
@@ -138,8 +136,6 @@ public class MazeGenerator : MonoBehaviour
 
             }
         }
-
-        SpawnBatteries();
     }
 
     private bool TestConnection(ConnectionPoint connectionPoint)
@@ -267,21 +263,6 @@ public class MazeGenerator : MonoBehaviour
                 controller.enabled = true;
             }
 
-        }
-    }
-
-    private void SpawnBatteries()
-    {
-        for (int i = 0; i < batteriesPerMaze; i++)
-        {
-            GameObject randomChunk = placedChunks[Random.Range(0, placedChunks.Count)];
-            Vector3 randomPosition = randomChunk.transform.position + new Vector3(
-                Random.Range(-4f, 4f),
-                1f,
-                Random.Range(-4f, 4f)
-            );
-
-            Instantiate(batteryPrefab, randomPosition, Quaternion.identity);
         }
     }
 

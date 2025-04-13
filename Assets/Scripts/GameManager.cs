@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     public GameObject BatteryBar;
     public GameObject GameOver;
 
-    public float fadeDuration = 1.5f;
+    public float fadeDuration = 2.0f;
 
     void Awake()
     {
@@ -81,5 +81,6 @@ public class GameManager : MonoBehaviour
 
         // Ensure it's fully opaque at the end
         canvasGroup.alpha = 1f;
+        Debug.Log("Fade-in complete for: " + objectToFade.name);
     }
 }
