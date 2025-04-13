@@ -17,7 +17,7 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private float enemySpawnDelay = 30f;
     private Coroutine spawnEnemyCoroutine = null;
 
-    [SerializeField] private int maxDepth = 10;  // Maximum recursion depth
+    [SerializeField] private int maxDepth = 20;  // Maximum recursion depth
     private int currentDepth = 0;
     private List<ConnectionPoint> openConnections = new List<ConnectionPoint>();
     public List<GameObject> placedChunks = new List<GameObject>();
@@ -72,6 +72,17 @@ public class MazeGenerator : MonoBehaviour
 
         GetComponent<NavMeshSurface>().BuildNavMesh();
 
+        // Check if all single use chunks have been placed
+        foreach (GameObject singleChunk in singleChunkPrefabs)
+        {
+            if (chunkPrefabs.Contains(singleChunk))
+            {
+                Debug.Log($"Single chunk {singleChunk.name} not placed.");
+                GenerateMaze(maxDepth); // Regenerate if any single chunk is not placed
+                return; // Exit the method to avoid further processing
+            }
+        }
+
         // Pick exit
         if (placedChunks.Count > 0)
         {
@@ -116,15 +127,15 @@ public class MazeGenerator : MonoBehaviour
                 {
                     renderer.material = exitMaterial;
                     GameObject lightGO = new GameObject("ExitLight");
-                    Light pointLight = lightGO.AddComponent<Light>();
-                    pointLight.type = LightType.Point;
-                    pointLight.range = 20f;
-                    pointLight.intensity = 20f;
-                    pointLight.color = exitMaterial.GetColor("_EmissionColor");
+                    // Light pointLight = lightGO.AddComponent<Light>();
+                    // pointLight.type = LightType.Point;
+                    // pointLight.range = 20f;
+                    // pointLight.intensity = 20f;
+                    // pointLight.color = exitMaterial.GetColor("_EmissionColor");
 
-                    // Parent and position the light
-                    lightGO.transform.parent = exitConnection.DeadEndPrefab.transform;
-                    lightGO.transform.localPosition = Vector3.forward * 0.5f;
+                    // // Parent and position the light
+                    // lightGO.transform.parent = exitConnection.DeadEndPrefab.transform;
+                    // lightGO.transform.localPosition = Vector3.forward * 0.5f;
 
                     if (!exitConnection.DeadEndPrefab.TryGetComponent<BoxCollider>(out var triggerCollider))
                     {
@@ -216,6 +227,7 @@ public class MazeGenerator : MonoBehaviour
                     }
                 }
 
+                // If the chunk is a single use chunk, remove it from the list
                 if (singleChunkPrefabs.Contains(randomChunk))
                 {
                     Debug.Log("Removing single chunk" + chunkPrefabs.Count);
@@ -242,7 +254,6 @@ public class MazeGenerator : MonoBehaviour
         placedChunks.Clear();
         openConnections.Clear();
         currentDepth = 0;
-        maxDepth += 5;
 
         // Generate new maze
         NavMesh.RemoveAllNavMeshData();

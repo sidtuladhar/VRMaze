@@ -4164,6 +4164,9 @@ MonoBehaviour:
   initialNPCResponses:
   - '?'
   interactions: 0
+  cooldownTime: 30
+  maxAttempts: 10
+  maxReputation: 5
   rotationSpeed: 180
   conversationHistory: []
 --- !u!82 &6555306745058768484
