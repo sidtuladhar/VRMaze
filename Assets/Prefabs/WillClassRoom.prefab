@@ -68,8 +68,8 @@ MonoBehaviour:
   m_text: Testing 1 2 3 4 5 6 7 8 nine ten eleven 2 explosions are real are they
     not what are you? wh
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
+  m_sharedMaterial: {fileID: -8022257101594604644, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -93,7 +93,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 33.65
+  m_fontSize: 33.4
   m_fontSizeBase: 32
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -204,8 +204,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Reputation: 0'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
+  m_sharedMaterial: {fileID: -8022257101594604644, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -267,7 +267,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -47.222534, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -340,8 +340,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: ' sddddddddddddddddddddd ssssss d f f f f '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
+  m_sharedMaterial: {fileID: -8022257101594604644, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -365,7 +365,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34.45
+  m_fontSize: 28.8
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -870,8 +870,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Button
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
+  m_sharedMaterial: {fileID: -8022257101594604644, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1161,8 +1161,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: William Yeh
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
+  m_sharedMaterial: {fileID: -8022257101594604644, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -1224,7 +1224,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -67.46063, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -1373,8 +1373,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Button
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
+  m_sharedMaterial: {fileID: -8022257101594604644, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -4088,6 +4088,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5826274352163250907}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6555306745058768484}
   m_SourcePrefab: {fileID: 100100000, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
 --- !u!1 &8212038837135078839 stripped
 GameObject:
@@ -4140,6 +4143,9 @@ MonoBehaviour:
   - {fileID: 582260183626020196}
   - {fileID: 8701143534893721485}
   - {fileID: 1363632757607208399}
+  audioSource: {fileID: 6555306745058768484}
+  smallTalkClip: {fileID: 8300000, guid: 1eb6b2bde780743378f2e78e134d1651, type: 3}
+  mediumTalkClip: {fileID: 8300000, guid: 15559f9003ddc46b39bc3ced6e5ad28a, type: 3}
   interactionRadius: 7
   systemPrompt: 'You are a student NPC named William Yeh in a game called School
     Social Anxiety Simulator. You are a mentally ill, neurotic college student, full
@@ -4157,8 +4163,106 @@ MonoBehaviour:
     and scroll on Twitter. '
   initialNPCResponses:
   - '?'
+  interactions: 0
   rotationSpeed: 180
   conversationHistory: []
+--- !u!82 &6555306745058768484
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8212038837135078839}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!4 &8844178499814403853 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}

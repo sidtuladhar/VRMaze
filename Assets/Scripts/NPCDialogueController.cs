@@ -55,12 +55,16 @@ public class NPCDialogueController : MonoBehaviour
     public Button[] responseButtons;
     public TMP_Text[] responseButtonTexts;
 
+    [Header("Audio")]
+    public AudioSource audioSource;
+    public AudioClip smallTalkClip;
+    public AudioClip mediumTalkClip;
+
     [Header("NPC Settings")]
     public float interactionRadius = 5f;
     public string systemPrompt;
     public string[] initialNPCResponses;
     public int interactions = 0;
-
 
     public float rotationSpeed = 180f;
 
@@ -69,8 +73,12 @@ public class NPCDialogueController : MonoBehaviour
     private Transform player;
     private bool isProcessing = false;
     private bool isInteracting = false;
+
+    private bool lastRepIncrease = true;
     private int reputation = 0;
     private int[] optionReputationDeltas = new int[3]; // +1, -1, -1, etc.
+
+    private int repDelta = 0;
 
     private string currentNPCLine = "";
 
@@ -172,6 +180,22 @@ public class NPCDialogueController : MonoBehaviour
         var result = await SendMessageToChatGPT(selected);
         currentNPCLine = result.Item1;
         npcResponseText.text = result.Item1;
+
+        // Determine if the most recent rep change was positive
+        lastRepIncrease = repDelta > 0;
+
+        // Play sound based on rep change
+        if (audioSource != null)
+        {
+            if (lastRepIncrease && smallTalkClip != null)
+            {
+                audioSource.PlayOneShot(smallTalkClip);
+            }
+            else if (!lastRepIncrease && mediumTalkClip != null)
+            {
+                audioSource.PlayOneShot(mediumTalkClip);
+            }
+        }
 
         currentOptions = result.Item2;
         for (int i = 0; i < 3; i++)
@@ -290,7 +314,7 @@ public class NPCDialogueController : MonoBehaviour
     {
         string npcLine = npcResponseText.text; // Default value
         string[] options = currentOptions; // Default value 
-        int repDelta = 0;
+        repDelta = 0; // Used to determine sound logic
 
         optionReputationDeltas = new int[3] { -1, -1, -1 };
 
@@ -340,6 +364,7 @@ public class NPCDialogueController : MonoBehaviour
                     }
                 }
                 conversationHistory.Add(new ChatMessage("assistant", npcLine));
+
             }
             else
             {
