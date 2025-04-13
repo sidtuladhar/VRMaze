@@ -76,7 +76,7 @@ public class NPCDialogueController : MonoBehaviour
 
     private string[] currentOptions = new string[3];
 
-    private const string OpenAiApiKey = ""; // Add key
+    private const string OpenAiApiKey = ""; // Add API key
     private const string OpenAiApiUrl = "https://api.openai.com/v1/chat/completions";
 
     void Start()
