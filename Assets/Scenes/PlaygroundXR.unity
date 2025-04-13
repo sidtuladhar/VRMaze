@@ -1031,10 +1031,9 @@ MonoBehaviour:
   playerPrefab: {fileID: 1031318685813333101, guid: 7295590a4f2b94d6b99469d045741904, type: 3}
   enemyPrefab: {fileID: 1885044770559623788, guid: d3d1a6fa3e103484fbd444b701f5d60f, type: 3}
   exitMaterial: {fileID: 2100000, guid: e416c3dcef0dc4b67839199e8b6b293a, type: 2}
+  enemySpawnDelay: 30
   maxDepth: 10
   placedChunks: []
-  batteryPrefab: {fileID: 4904755319449602113, guid: cb5c6381b792440d7a0f4c48e8663b99, type: 3}
-  batteriesPerMaze: 2
 --- !u!4 &407894747
 Transform:
   m_ObjectHideFlags: 0
@@ -1765,13 +1764,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 12e499809b68e49a483416d60109722a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chatBoxUI: {fileID: 1805239710}
-  playerInputField: {fileID: 1789477077}
-  npcResponseText: {fileID: 550978450}
-  reputationText: {fileID: 0}
-  sendButton: {fileID: 482607169}
-  interactionRadius: 5
-  systemPrompt: You are a generic NPC with no special personality.
 --- !u!135 &659689924
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -2052,8 +2044,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: William Yeh
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
+  m_sharedMaterial: {fileID: -8022257101594604644, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2115,7 +2107,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: 0, y: 0, z: -108.42638, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2188,8 +2180,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Button
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
+  m_sharedMaterial: {fileID: -8022257101594604644, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -2479,6 +2471,7 @@ MonoBehaviour:
     domain "
   initialNPCResponses:
   - '?'
+  interactions: 0
   rotationSpeed: 200
   conversationHistory: []
 --- !u!1 &832575517
@@ -3508,8 +3501,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 'Reputation: 0'
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
+  m_sharedMaterial: {fileID: -8022257101594604644, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3571,7 +3564,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -69.58891, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -3885,8 +3878,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: ' sddddddddddddddddddddd ssssss d f f f f '
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
+  m_sharedMaterial: {fileID: -8022257101594604644, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3910,7 +3903,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 34.45
+  m_fontSize: 30.15
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -4021,8 +4014,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Button
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
+  m_sharedMaterial: {fileID: -8022257101594604644, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5665,13 +5658,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   flashlight: {fileID: 385878848496155801}
-  maxBatteryLife: 100
-  batteryDrainRate: 1
-  batteryRechargeAmount: 25
   isOn: 1
-  maxFogDensity: 0.5
-  fogColor: {r: 0, g: 0, b: 0, a: 1}
-  gameOverDelay: 5
 --- !u!1 &1031318685316079372
 GameObject:
   m_ObjectHideFlags: 0
