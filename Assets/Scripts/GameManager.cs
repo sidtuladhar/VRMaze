@@ -46,6 +46,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void Update()
+    {
+        // Check for game over condition
+        if (studentsHelped == studentsToHelp)
+        {
+            // Create a coroutine to handle the win game sequence
+        }
+    }
+
     public void ShowDeathUI()
     {
         Debug.Log("GameManager: ShowDeathUI called.");
