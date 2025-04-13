@@ -10,7 +10,6 @@ public class BatteryPickup : MonoBehaviour
             
             if (flashlight != null)
             {
-                flashlight.AddBattery();
                 Destroy(gameObject);
             } else {
                 Debug.LogWarning("FlashlightSystem not found on player");

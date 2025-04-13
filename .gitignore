@@ -60,3 +60,5 @@ Thumbs.db.meta
 .vscode/
 .idea/
 
+.env
+

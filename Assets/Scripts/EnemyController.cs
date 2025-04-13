@@ -17,7 +17,6 @@ public class EnemyController : MonoBehaviour
     private Transform player;
     private MazeGenerator mazeGenerator;
     private bool isChasing = false;
-    private TextMeshProUGUI deathText;
     [SerializeField] private AudioClip walkingSound;
     private AudioSource enemyAudio;
     private FlashlightSystem flashlightSystem;
@@ -27,12 +26,6 @@ public class EnemyController : MonoBehaviour
     {
 
         enemyAudio = GetComponent<AudioSource>();
-        deathText = GameObject.Find("Death").GetComponent<TextMeshProUGUI>();
-        if (deathText != null)
-        {
-            deathText = deathText.GetComponent<TextMeshProUGUI>();
-            deathText.gameObject.SetActive(false);
-        } 
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -221,12 +214,6 @@ public class EnemyController : MonoBehaviour
         float elapsedTime = 0f;
         float currentFogDensity = RenderSettings.fogDensity;
 
-        // Show game over text
-        if (deathText != null)
-        {
-            deathText.color = new Color(1f, 0f, 0f, 0f);
-            deathText.gameObject.SetActive(true);
-        }
 
         // Disable player control
         PlayerController player = GetComponent<PlayerController>();
@@ -235,18 +222,20 @@ public class EnemyController : MonoBehaviour
             player.enabled = false;
         }
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ShowDeathUI();
+        }
+        else
+        {
+            Debug.LogWarning("GameManager instance not found");
+        }
 
         // Gradually transition to dense fog
-        while (elapsedTime < 2)
+        while (elapsedTime < 4)
         {
-            float t = elapsedTime / 2f;
+            float t = elapsedTime / 4f;
             RenderSettings.fogDensity = Mathf.Lerp(currentFogDensity, 0.5f, t);
-
-            if (deathText != null)
-            {
-                float textAlpha = Mathf.Lerp(0f, 1f, t * 2f - 0.5f); // Start fading in at 25% through the transition
-                deathText.color = new Color(1f, 0f, 0f, Mathf.Clamp01(textAlpha));
-            }
 
             elapsedTime += Time.deltaTime;
             yield return null;
