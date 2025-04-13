@@ -1,6 +1,7 @@
 using UnityEngine;
 using Random = UnityEngine.Random;
 using System.Collections.Generic;
+using System.Collections;
 using Unity.AI.Navigation;
 using System.Linq;
 using UnityEngine.AI;
@@ -13,6 +14,8 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Material exitMaterial; // Assign the glowing material in inspector
 
+    [SerializeField] private float enemySpawnDelay = 30f;
+    private Coroutine spawnEnemyCoroutine = null;
 
     [SerializeField] private int maxDepth = 10;  // Maximum recursion depth
     private int currentDepth = 0;
@@ -109,7 +112,7 @@ public class MazeGenerator : MonoBehaviour
                     attempts++;
                 }
                 SpawnPlayer();
-                enemy = SpawnEnemy(enemySpawnConnection);
+                spawnEnemyCoroutine = StartCoroutine(SpawnEnemyAfterDelay(enemySpawnConnection, enemySpawnDelay));
 
                 if (exitConnection.DeadEndPrefab.TryGetComponent<MeshRenderer>(out var renderer))
                 {
@@ -308,5 +311,22 @@ public class MazeGenerator : MonoBehaviour
         GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
         enemy.transform.parent = transform;
         return enemy;
+    }
+
+    private IEnumerator SpawnEnemyAfterDelay(ConnectionPoint spawnPoint, float delay)
+    {
+        // Wait for the specified delay
+        yield return new WaitForSeconds(delay);
+
+        // Check if the script/object is still active before spawning
+        // (e.g., if RegenerateMaze was called during the delay)
+        if (this != null && this.enabled && spawnPoint != null)
+        {
+            Debug.Log($"Timer finished. Spawning enemy at {spawnPoint.transform.position}...");
+            // Call the original SpawnEnemy function and store the reference
+            enemy = SpawnEnemy(spawnPoint);
+        }
+        
+        spawnEnemyCoroutine = null; // Clear the coroutine reference
     }
 }

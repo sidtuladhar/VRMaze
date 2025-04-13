@@ -17,7 +17,7 @@ public class EnemyController : MonoBehaviour
     private Transform player;
     private MazeGenerator mazeGenerator;
     private bool isChasing = false;
-    private TextMeshProUGUI deathText;
+    public TextMeshProUGUI deathText;
     [SerializeField] private AudioClip walkingSound;
     private AudioSource enemyAudio;
     private FlashlightSystem flashlightSystem;
@@ -27,12 +27,6 @@ public class EnemyController : MonoBehaviour
     {
 
         enemyAudio = GetComponent<AudioSource>();
-        deathText = GameObject.Find("Death").GetComponent<TextMeshProUGUI>();
-        if (deathText != null)
-        {
-            deathText = deathText.GetComponent<TextMeshProUGUI>();
-            deathText.gameObject.SetActive(false);
-        } 
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -221,12 +215,6 @@ public class EnemyController : MonoBehaviour
         float elapsedTime = 0f;
         float currentFogDensity = RenderSettings.fogDensity;
 
-        // Show game over text
-        if (deathText != null)
-        {
-            deathText.color = new Color(1f, 0f, 0f, 0f);
-            deathText.gameObject.SetActive(true);
-        }
 
         // Disable player control
         PlayerController player = GetComponent<PlayerController>();
@@ -235,6 +223,14 @@ public class EnemyController : MonoBehaviour
             player.enabled = false;
         }
 
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ShowDeathUI();
+        }
+        else
+        {
+            Debug.LogWarning("GameManager instance not found");
+        }
 
         // Gradually transition to dense fog
         while (elapsedTime < 2)

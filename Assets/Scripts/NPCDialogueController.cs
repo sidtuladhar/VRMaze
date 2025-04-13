@@ -27,6 +27,24 @@ public class ChatMessage
     }
 }
 
+[System.Serializable]
+public class ChatGPTResponse
+{
+    public Choice[] choices;
+}
+
+[System.Serializable]
+public class Choice
+{
+    public Message message;
+}
+
+[System.Serializable]
+public class Message
+{
+    public string role;
+    public string content;
+}
 
 public class NPCDialogueController : MonoBehaviour
 {
@@ -41,18 +59,21 @@ public class NPCDialogueController : MonoBehaviour
     public float interactionRadius = 5f;
     public string systemPrompt;
     public string[] initialNPCResponses;
+    public int interactions = 0;
+
 
     public float rotationSpeed = 180f;
 
     public List<ChatMessage> conversationHistory = new List<ChatMessage>();
 
     private Transform player;
-    private bool isConversationStarted = false;
     private bool isProcessing = false;
+    private bool isInteracting = false;
     private int reputation = 0;
     private int[] optionReputationDeltas = new int[3]; // +1, -1, -1, etc.
 
     private string currentNPCLine = "";
+
     private string[] currentOptions = new string[3];
 
     private const string OpenAiApiKey = ""; // Add key
@@ -78,7 +99,7 @@ public class NPCDialogueController : MonoBehaviour
 
         float distance = Vector3.Distance(transform.position, player.position);
 
-        if (distance <= interactionRadius)
+        if (!isInteracting && distance <= interactionRadius)
         {
 
             Vector3 directionToPlayer = player.position - transform.position;
@@ -91,29 +112,19 @@ public class NPCDialogueController : MonoBehaviour
             }
 
             UnlockCursor();
+
             dialogueUI.SetActive(true);
 
-            if (!isConversationStarted)
+            npcResponseText.text = currentNPCLine;
+            for (int i = 0; i < 3; i++)
             {
-                isConversationStarted = true;
-                currentNPCLine = initialNPCResponses[UnityEngine.Random.Range(0, initialNPCResponses.Length)];
-                npcResponseText.text = currentNPCLine;
-
-                Debug.Log($"[Start] NPC greeting: {currentNPCLine}");
-                StartCoroutine(HandleInitialDialogue(currentNPCLine));
-
+                responseButtonTexts[i].text = currentOptions[i];
             }
-            else
-            {
-                npcResponseText.text = currentNPCLine;
-                for (int i = 0; i < 3; i++)
-                {
-                    responseButtonTexts[i].text = currentOptions[i];
-                }
-            }
+            isInteracting = true;
         }
-        else if (distance > interactionRadius)
+        else if (isInteracting && distance > interactionRadius)
         {
+            isInteracting = false;
             dialogueUI.SetActive(false);
             LockCursor();
         }
@@ -130,7 +141,7 @@ public class NPCDialogueController : MonoBehaviour
         for (int i = 0; i < 3; i++)
         {
             if (!string.IsNullOrWhiteSpace(currentOptions[i]))
-                responseButtonTexts[i].text = CleanOptionForButton(currentOptions[i]);
+                responseButtonTexts[i].text = currentOptions[i];
             else
                 responseButtonTexts[i].text = "MISSING OPTION";
         }
@@ -167,9 +178,7 @@ public class NPCDialogueController : MonoBehaviour
         {
             if (!string.IsNullOrWhiteSpace(currentOptions[i]))
             {
-                string displayText = CleanOptionForButton(currentOptions[i]);
-                responseButtonTexts[i].text = displayText;
-                Debug.Log($"[UI] Button {i}: '{displayText}'");
+                responseButtonTexts[i].text = currentOptions[i];
             }
             else
             {
@@ -180,7 +189,6 @@ public class NPCDialogueController : MonoBehaviour
 
         isProcessing = false;
     }
-
 
     async Task<(string, string[], int)> SendMessageToChatGPT(string message)
     {
@@ -286,8 +294,6 @@ public class NPCDialogueController : MonoBehaviour
 
         optionReputationDeltas = new int[3] { -1, -1, -1 };
 
-        
-
         try
         {
             // 1. Define an anonymous type matching the expected JSON structure
@@ -346,8 +352,6 @@ public class NPCDialogueController : MonoBehaviour
             Debug.LogError($"[ParseChatGPTResponse_Replicated] Input string: {fullResponse}");
         }
 
-
-        Debug.LogError("npcLine: " + npcLine);
         return (npcLine, options, repDelta);
     }
 
@@ -368,55 +372,15 @@ public class NPCDialogueController : MonoBehaviour
         Cursor.visible = false;
     }
 
-    [System.Serializable]
-    private class ChatGPTResponse
-    {
-        public Choice[] choices;
-    }
-
-    [System.Serializable]
-    private class Choice
-    {
-        public Message message;
-    }
-
-    [System.Serializable]
-    private class Message
-    {
-        public string role;
-        public string content;
-    }
-    private string CleanOptionForButton(string option)
-    {
-        // Remove (+1) or (-1)
-        option = option.Replace("(+1)", "").Replace("(-1)", "").Trim();
-
-        // Remove square brackets
-        if (option.StartsWith("[") && option.EndsWith("]"))
-        {
-            option = option.Substring(1, option.Length - 2).Trim();
-        }
-
-        // Remove surrounding quotes
-        if ((option.StartsWith("\"") && option.EndsWith("\"")) ||
-            (option.StartsWith("'") && option.EndsWith("'")))
-        {
-            option = option.Substring(1, option.Length - 2).Trim();
-        }
-
-        // Remove leading dash
-        if (option.StartsWith("- "))
-        {
-            option = option.Substring(2).Trim();
-        }
-
-        return option;
-    }
-
     void InitializeConversation()
     {
         conversationHistory.Clear();
         conversationHistory.Add(new ChatMessage("system", systemPrompt));
         conversationHistory.Add(new ChatMessage("user", "Hello?"));
+
+        currentNPCLine = initialNPCResponses[UnityEngine.Random.Range(0, initialNPCResponses.Length)];
+        npcResponseText.text = currentNPCLine;
+        StartCoroutine(HandleInitialDialogue(currentNPCLine));
+
     }
 }

@@ -20,8 +20,6 @@ public class FlashlightSystem : MonoBehaviour
     [SerializeField] private float maxFogDensity = 0.5f;
     [SerializeField] private Color fogColor = Color.black;
     [SerializeField] private float gameOverDelay = 5f;
-    private TextMeshProUGUI gameOverText;
-
 
     private Color initialFogColor;
 
@@ -43,16 +41,6 @@ public class FlashlightSystem : MonoBehaviour
         initialFogColor = RenderSettings.fogColor;
 
         UpdateUI();
-        gameOverText = GameObject.Find("GameOver").GetComponent<TextMeshProUGUI>();
-        if (gameOverText != null)
-        {
-            gameOverText = gameOverText.GetComponent<TextMeshProUGUI>();
-            gameOverText.gameObject.SetActive(false);
-        }
-        else
-        {
-            Debug.LogWarning("GameOver Text not found in scene. Create a UI Text named 'GameOver'");
-        }
         batteryBar = GameObject.Find("BatteryBar").GetComponent<Image>();
 
     }
@@ -124,18 +112,20 @@ public class FlashlightSystem : MonoBehaviour
         float elapsedTime = 0f;
         float currentFogDensity = RenderSettings.fogDensity;
 
-        // Show game over text
-        if (gameOverText != null)
-        {
-            gameOverText.color = new Color(1f, 0f, 0f, 0f);
-            gameOverText.gameObject.SetActive(true);
-        }
-
         // Disable player control
         PlayerController player = GetComponent<PlayerController>();
         if (player != null)
         {
             player.enabled = false;
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.ShowGameOverUI();
+        }
+        else
+        {
+            Debug.LogWarning("GameManager instance not found");
         }
 
 
@@ -145,12 +135,6 @@ public class FlashlightSystem : MonoBehaviour
             float t = elapsedTime / gameOverDelay;
             RenderSettings.fogDensity = Mathf.Lerp(currentFogDensity, maxFogDensity, t);
             RenderSettings.fogColor = Color.Lerp(initialFogColor, fogColor, t);
-
-            if (gameOverText != null)
-            {
-                float textAlpha = Mathf.Lerp(0f, 1f, t * 2f - 0.5f); // Start fading in at 25% through the transition
-                gameOverText.color = new Color(1f, 0f, 0f, Mathf.Clamp01(textAlpha));
-            }
 
             elapsedTime += Time.deltaTime;
             yield return null;

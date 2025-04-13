@@ -11,7 +11,7 @@ public class ExitTrigger : MonoBehaviour
             if (mazeGenerator != null)
             {
                 // Clean up existing maze before regenerating
-                mazeGenerator.RegenerateMaze();
+                // End the game
             }
         }
     }
