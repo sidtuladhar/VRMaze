@@ -70,7 +70,7 @@ public class NPCDialogueController : MonoBehaviour
     private bool isProcessing = false;
     private bool isInteracting = false;
     private int reputation = 0;
-    private int[] optionReputationDeltas = new int[3]; // +1, -1, -1, etc.
+    private int[] optionReputationDeltas = new int[3]; // +1, -1, -1
 
     private string currentNPCLine = "";
 
