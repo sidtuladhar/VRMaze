@@ -9,6 +9,9 @@ public class GameManager : MonoBehaviour
     public GameObject BatteryBar;
     public GameObject GameOver;
 
+    public int studentsHelped = 0;
+    public int studentsToHelp = 2;
+
     public float fadeDuration = 2.0f;
 
     void Awake()
@@ -43,44 +46,38 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void ShowGameOverUI()
-    {
-        Debug.Log("GameManager: ShowGameOverUI called.");
-        // Activate the entire Game Over UI object
-        FadeInObject(GameOver, fadeDuration);
-
-        // You can add other simple game over logic here if needed later, like:
-        // Time.timeScale = 0f; // Pause game
-    }
-
     public void ShowDeathUI()
     {
         Debug.Log("GameManager: ShowDeathUI called.");
         // Activate the entire Game Over UI object
-        FadeInObject(Death, fadeDuration);
-
-        // You can add other simple game over logic here if needed later, like:
-        // Time.timeScale = 0f; // Pause game
+        if (Death != null)
+        {
+            StartCoroutine(FadeInObject(Death, fadeDuration));
+        }
     }
 
     private IEnumerator FadeInObject(GameObject objectToFade, float duration)
     {
         CanvasGroup canvasGroup = objectToFade.GetComponent<CanvasGroup>();
+        if (canvasGroup == null)
+        {
+            Debug.LogError($"FadeInObject Error: GameObject '{objectToFade.name}' is missing a CanvasGroup component!");
+            yield break; // Stop if no CanvasGroup
+        }
 
-        // Set alpha to 0 and make sure the object is active to start the fade
-        canvasGroup.alpha = 0f;
+        canvasGroup.alpha = 0.0f;
         objectToFade.SetActive(true); // Activate the object now
+
 
         float timer = 0f;
         while (timer < duration)
         {
             timer += Time.unscaledDeltaTime;
-            canvasGroup.alpha = Mathf.Clamp01(timer / duration); // Calculate alpha
+            canvasGroup.alpha = Mathf.Clamp01(timer / duration);
             yield return null;
         }
 
         // Ensure it's fully opaque at the end
         canvasGroup.alpha = 1f;
-        Debug.Log("Fade-in complete for: " + objectToFade.name);
     }
 }
