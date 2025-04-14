@@ -13,16 +13,14 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject enemyPrefab;
     [SerializeField] private Material exitMaterial; // Assign the glowing material in inspector
-
     [SerializeField] private float enemySpawnDelay = 30f;
-    private Coroutine spawnEnemyCoroutine = null;
-
     [SerializeField] private int maxDepth = 20;  // Maximum recursion depth
+
     private int currentDepth = 0;
     private List<ConnectionPoint> openConnections = new List<ConnectionPoint>();
     public List<GameObject> placedChunks = new List<GameObject>();
-
     private GameObject enemy;
+    private ConnectionPoint exitConnection;
 
     void Start()
     {
@@ -98,7 +96,7 @@ public class MazeGenerator : MonoBehaviour
             if (randomConnections.Length > 0)
             {
                 // Pick a random connection point.
-                ConnectionPoint exitConnection = randomConnections[Random.Range(0, randomConnections.Length)];
+                exitConnection = randomConnections[Random.Range(0, randomConnections.Length)];
                 ConnectionPoint enemySpawnConnection = randomConnections[Random.Range(0, randomConnections.Length)];
 
                 // Find a connection point for the exit
@@ -121,30 +119,7 @@ public class MazeGenerator : MonoBehaviour
                     attempts++;
                 }
                 SpawnPlayer();
-                spawnEnemyCoroutine = StartCoroutine(SpawnEnemyAfterDelay(enemySpawnConnection, enemySpawnDelay));
-
-                if (exitConnection.DeadEndPrefab.TryGetComponent<MeshRenderer>(out var renderer))
-                {
-                    renderer.material = exitMaterial;
-                    GameObject lightGO = new GameObject("ExitLight");
-                    // Light pointLight = lightGO.AddComponent<Light>();
-                    // pointLight.type = LightType.Point;
-                    // pointLight.range = 20f;
-                    // pointLight.intensity = 20f;
-                    // pointLight.color = exitMaterial.GetColor("_EmissionColor");
-
-                    // // Parent and position the light
-                    // lightGO.transform.parent = exitConnection.DeadEndPrefab.transform;
-                    // lightGO.transform.localPosition = Vector3.forward * 0.5f;
-
-                    if (!exitConnection.DeadEndPrefab.TryGetComponent<BoxCollider>(out var triggerCollider))
-                    {
-                        triggerCollider = exitConnection.DeadEndPrefab.AddComponent<BoxCollider>();
-                    }
-                    triggerCollider.isTrigger = true;
-                    exitConnection.DeadEndPrefab.AddComponent<ExitTrigger>();
-                }
-
+                StartCoroutine(SpawnEnemyAfterDelay(enemySpawnConnection, enemySpawnDelay));
             }
         }
     }
@@ -318,7 +293,34 @@ public class MazeGenerator : MonoBehaviour
             // Call the original SpawnEnemy function and store the reference
             enemy = SpawnEnemy(spawnPoint);
         }
-        
-        spawnEnemyCoroutine = null; // Clear the coroutine reference
+    }
+
+    public void WinGame()
+    {
+        Destroy(enemy);
+        enemy = null;
+        // Play sound
+
+        if (exitConnection.DeadEndPrefab.TryGetComponent<MeshRenderer>(out var renderer))
+        {
+            renderer.material = exitMaterial;
+            GameObject lightGO = new GameObject("ExitLight");
+            Light pointLight = lightGO.AddComponent<Light>();
+            pointLight.type = LightType.Point;
+            pointLight.range = 20f;
+            pointLight.intensity = 20f;
+            pointLight.color = exitMaterial.GetColor("_EmissionColor");
+
+            // Parent and position the light
+            lightGO.transform.parent = exitConnection.DeadEndPrefab.transform;
+            lightGO.transform.localPosition = Vector3.forward * 0.5f;
+
+            if (!exitConnection.DeadEndPrefab.TryGetComponent<BoxCollider>(out var triggerCollider))
+            {
+                triggerCollider = exitConnection.DeadEndPrefab.AddComponent<BoxCollider>();
+            }
+            triggerCollider.isTrigger = true;
+            exitConnection.DeadEndPrefab.AddComponent<ExitTrigger>();
+        }
     }
 }
