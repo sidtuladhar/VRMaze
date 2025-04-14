@@ -1576,6 +1576,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WestWall (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2920532230843555151, guid: b8a66181e391b46619aa2bf8ba3d2ef7, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d7a2a52f56967444e81ad7470db7c97f, type: 2}
     - target: {fileID: 3385085302655431651, guid: b8a66181e391b46619aa2bf8ba3d2ef7, type: 3}
       propertyPath: m_LocalScale.x
       value: 30
@@ -2203,6 +2207,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SouthWall
       objectReference: {fileID: 0}
+    - target: {fileID: 2920532230843555151, guid: 7bb73837d15a54674b9a3cbfd7e3079f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f6ae2f9ca84964ced8d679160ff5a020, type: 2}
     - target: {fileID: 3385085302655431651, guid: 7bb73837d15a54674b9a3cbfd7e3079f, type: 3}
       propertyPath: m_LocalScale.x
       value: 20
@@ -2479,6 +2487,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2920532230843555151, guid: 0bd1a7fe642a24d0c8545d2335d44bee, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f6ae2f9ca84964ced8d679160ff5a020, type: 2}
     - target: {fileID: 3385085302655431651, guid: 0bd1a7fe642a24d0c8545d2335d44bee, type: 3}
       propertyPath: m_LocalPosition.x
       value: -20.5
@@ -3206,6 +3218,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: EastWall (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 2920532230843555151, guid: 64a7135bc7271436db77e73f2431dea2, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: f4fc284f83dd746eaa186b5773f6359d, type: 2}
     - target: {fileID: 3385085302655431651, guid: 64a7135bc7271436db77e73f2431dea2, type: 3}
       propertyPath: m_LocalScale.x
       value: 30
@@ -3404,6 +3420,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SouthWall (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 2920532230843555151, guid: 7bb73837d15a54674b9a3cbfd7e3079f, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: d7a2a52f56967444e81ad7470db7c97f, type: 2}
     - target: {fileID: 3385085302655431651, guid: 7bb73837d15a54674b9a3cbfd7e3079f, type: 3}
       propertyPath: m_LocalScale.x
       value: 30
