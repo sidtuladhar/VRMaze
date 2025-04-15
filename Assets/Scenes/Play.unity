@@ -692,7 +692,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Death: {fileID: 878915990}
   studentsHelped: 0
-  studentsToHelp: 2
+  studentsToHelp: 3
   fadeDuration: 3
 --- !u!4 &1591902849
 Transform:

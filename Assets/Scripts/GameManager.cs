@@ -6,10 +6,8 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
-    public GameObject Death;
-
     public int studentsHelped = 0;
-    public int studentsToHelp = 2;
+    public int studentsToHelp = 3;
 
     public float fadeDuration = 2.0f;
 
@@ -24,21 +22,11 @@ public class GameManager : MonoBehaviour
         else
         {
             Instance = this;
-            // Optional: If your GameManager needs to persist across scenes
-            // DontDestroyOnLoad(gameObject);
         }
     }
 
     void Start()
     {
-        if (Death != null)
-        {
-            Death.SetActive(false);
-        }
-        else
-        {
-            Debug.LogWarning("One or more UI GameObjects are not assigned to the GameManager in the Inspector!");
-        }
     }
 
     void Update()
@@ -60,11 +48,15 @@ public class GameManager : MonoBehaviour
 
     public void ShowDeathUI()
     {
-        Debug.Log("GameManager: ShowDeathUI called.");
-        // Activate the entire Game Over UI object
-        if (Death != null)
-        {
-            SceneManager.LoadScene("Game Over");
-        }
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        SceneManager.LoadScene("Game Over");
+    }
+
+    public void ShowWinUI()
+    {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
+        SceneManager.LoadScene("You Won");
     }
 }

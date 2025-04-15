@@ -6,13 +6,7 @@ public class ExitTrigger : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            // Find the MazeGenerator and regenerate
-            MazeGenerator mazeGenerator = FindFirstObjectByType<MazeGenerator>();
-            if (mazeGenerator != null)
-            {
-                // Clean up existing maze before regenerating
-                // End the game
-            }
+            GameManager.Instance.ShowWinUI();
         }
     }
 }

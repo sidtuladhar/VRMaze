@@ -80,7 +80,11 @@ public class EnemyController : MonoBehaviour
             if (distanceToPlayer <= killRange)
             {
                 animator.SetBool("isAttack", true);
-                startKillPlayer();
+                if (flashlightSystem != null)
+                {
+                    flashlightSystem.isOn = false; // Turn off flashlight
+                }
+                GameManager.Instance.ShowDeathUI();
             }
         }
         else if (isChasing)
@@ -198,104 +202,5 @@ public class EnemyController : MonoBehaviour
         }
 
         return false;
-    }
-
-    private void startKillPlayer()
-    {
-        StartCoroutine(KillPlayer());
-    }
-
-    private System.Collections.IEnumerator KillPlayer()
-    {
-        // Enable fog if not already enabled
-        RenderSettings.fog = true;
-
-        // Gradually increase fog density
-        float elapsedTime = 0f;
-        float currentFogDensity = RenderSettings.fogDensity;
-
-
-        // Disable player control
-        PlayerController player = GetComponent<PlayerController>();
-        if (player != null)
-        {
-            player.enabled = false;
-        }
-
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.ShowDeathUI();
-        }
-        else
-        {
-            Debug.LogWarning("GameManager instance not found");
-        }
-
-        // Gradually transition to dense fog
-        while (elapsedTime < 4)
-        {
-            float t = elapsedTime / 4f;
-            RenderSettings.fogDensity = Mathf.Lerp(currentFogDensity, 0.5f, t);
-
-            elapsedTime += Time.deltaTime;
-            yield return null;
-        }
-
-        // Game over - reload scene or show game over screen
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-    }
-
-    // Optional: Visualize detection range in editor
-    private void OnDrawGizmosSelected()
-    {
-        if (player == null) return;
-
-        // Draw detection range around player
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawWireSphere(player.position, detectionRange);
-
-        // Draw the player's vision cone
-        Vector3 playerForwardDirection = Camera.main != null ? Camera.main.transform.forward : player.forward;
-        Gizmos.color = Color.blue;
-        Vector3 playerForward = playerForwardDirection * detectionRange;
-        Quaternion leftRayRotation = Quaternion.AngleAxis(-visionAngle, Vector3.up);
-        Quaternion rightRayRotation = Quaternion.AngleAxis(visionAngle, Vector3.up);
-        Vector3 leftRayDirection = leftRayRotation * playerForward;
-        Vector3 rightRayDirection = rightRayRotation * playerForward;
-        Gizmos.DrawRay(player.position, leftRayDirection);
-        Gizmos.DrawRay(player.position, rightRayDirection);
-
-        // Draw the multiple raycasts from player to enemy using angular offsets
-        Vector3 playerToEnemyDirection = (transform.position - player.position).normalized;
-        Vector3 rayStart = player.position + Vector3.up * 1.0f;
-
-        // Define ray directions with angular offsets
-        Vector3 centerRay = playerToEnemyDirection;
-        Vector3 leftRay = Quaternion.AngleAxis(-10, Vector3.up) * centerRay;
-        Vector3 rightRay = Quaternion.AngleAxis(10, Vector3.up) * centerRay;
-
-        Vector3[] rayDirections = new Vector3[] {
-        centerRay,
-        leftRay,
-        rightRay
-    };
-
-        // Draw each ray with a different color
-        Color[] rayColors = new Color[] {
-        Color.red,
-        Color.cyan,
-        Color.magenta
-    };
-
-        for (int i = 0; i < rayDirections.Length; i++)
-        {
-            Gizmos.color = rayColors[i];
-            Gizmos.DrawSphere(rayStart, 0.05f); // Small sphere at ray start
-            Gizmos.DrawRay(rayStart, rayDirections[i] * detectionRange);
-        }
-
-        // Draw kill range
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, killRange);
     }
 }
