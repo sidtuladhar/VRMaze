@@ -6,6 +6,8 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     public GameObject Death;
+    public GameObject BatteryBar;
+    public GameObject GameOver;
 
     public int studentsHelped = 0;
     public int studentsToHelp = 2;
@@ -30,13 +32,16 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        if (Death != null)
+        if (Death != null && BatteryBar != null && GameOver != null)
         {
             // Deactivate the UI elements at the start
             Death.SetActive(false);
+            BatteryBar.SetActive(true);
+            GameOver.SetActive(false);
         }
         else
         {
+            // Add a warning if any of the UI objects haven't been linked in the Inspector
             Debug.LogWarning("One or more UI GameObjects are not assigned to the GameManager in the Inspector!");
         }
     }
@@ -47,15 +52,6 @@ public class GameManager : MonoBehaviour
         if (studentsHelped == studentsToHelp)
         {
             // Create a coroutine to handle the win game sequence
-            MazeGenerator mazeGenerator = FindFirstObjectByType<MazeGenerator>();
-            if (mazeGenerator != null)
-            {
-                mazeGenerator.WinGame();
-            }
-            else
-            {
-                Debug.LogError("MazeGenerator not found in the scene.");
-            }
         }
     }
 

@@ -363,7 +363,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 878915991}
-  - {fileID: 273582534}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -406,7 +405,6 @@ MonoBehaviour:
   - {fileID: 4503286144166248192, guid: 4fa2ff2163b92458c85fa4f5ca39ab06, type: 3}
   - {fileID: 4503286144166248192, guid: 5988f40e7f3974fdca221335d5d2d3f7, type: 3}
   - {fileID: 8915251857623294207, guid: ed7d7f6d7a54d4e8297f70740280d9e2, type: 3}
-  - {fileID: 4503286144166248192, guid: f4c6746b905594352b3821fcd280314e, type: 3}
   singleChunkPrefabs:
   - {fileID: 4503286144166248192, guid: 729459a78e4e749079dabe97bb1f049c, type: 3}
   - {fileID: 4503286144166248192, guid: a12abcc7664ee48b5bd4d2cc7f50b5e8, type: 3}
@@ -414,7 +412,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 1885044770559623788, guid: d3d1a6fa3e103484fbd444b701f5d60f, type: 3}
   exitMaterial: {fileID: 2100000, guid: e416c3dcef0dc4b67839199e8b6b293a, type: 2}
   enemySpawnDelay: 30
-  maxDepth: 20
+  maxDepth: 15
   placedChunks: []
 --- !u!4 &407894747
 Transform:
@@ -691,6 +689,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Death: {fileID: 878915990}
+  BatteryBar: {fileID: 0}
+  GameOver: {fileID: 0}
   studentsHelped: 0
   studentsToHelp: 2
   fadeDuration: 3
