@@ -45,7 +45,15 @@ public class GameManager : MonoBehaviour
         // Check for game over condition
         if (studentsHelped == studentsToHelp)
         {
-            // Create a coroutine to handle the win game sequence
+            MazeGenerator mazeGenerator = FindFirstObjectByType<MazeGenerator>();
+            if (mazeGenerator != null)
+            {
+                mazeGenerator.WinGame();
+            }
+            else
+            {
+                Debug.LogError("MazeGenerator not found in the scene.");
+            }
         }
     }
 
