@@ -8,7 +8,7 @@ using UnityEngine.AI;
 
 public class MazeGenerator : MonoBehaviour
 {
-    [SerializeField] private List<GameObject> chunkPrefabs;  // Assign your chunk assets in inspector
+    [SerializeField] private List<GameObject> multiChunkPrefabs;  // Assign your chunk assets in inspector
     [SerializeField] private List<GameObject> singleChunkPrefabs;  // Chunks that will only be used once
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject enemyPrefab;
@@ -16,23 +16,30 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private float enemySpawnDelay = 30f;
     [SerializeField] private int maxDepth = 20;  // Maximum recursion depth
 
+    private List<GameObject> chunkPrefabs = new List<GameObject>();
     private int currentDepth = 0;
     private List<ConnectionPoint> openConnections = new List<ConnectionPoint>();
     public List<GameObject> placedChunks = new List<GameObject>();
     private GameObject enemy;
     private ConnectionPoint exitConnection;
+    private ConnectionPoint enemySpawnConnection;
+
+    private int regenAttempts = 0;
 
     void Start()
     {
         GenerateMaze(maxDepth);
+        StartCoroutine(SpawnEnemyAfterDelay(enemySpawnConnection, enemySpawnDelay));
     }
 
     private void GenerateMaze(int maxDepth)
     {
         currentDepth = 0;
 
+        chunkPrefabs.AddRange(multiChunkPrefabs);
+
         // Place first chunk at origin
-        GameObject firstChunk = chunkPrefabs[Random.Range(0, chunkPrefabs.Count)];
+        GameObject firstChunk = chunkPrefabs[0];
         GameObject firstInstance = Instantiate(firstChunk, Vector3.zero, Quaternion.identity);
         firstInstance.transform.parent = transform;
 
@@ -44,6 +51,9 @@ public class MazeGenerator : MonoBehaviour
 
         ConnectionPoint[] connections = firstInstance.GetComponentsInChildren<ConnectionPoint>();
         openConnections.AddRange(connections);
+
+        int maxGenAttempts = 10;  // Prevent infinite loop
+        int genAttempts = 0;
 
         // Start recursive generation with depth limit
         while (openConnections.Count > 0 && currentDepth < maxDepth)
@@ -60,6 +70,13 @@ public class MazeGenerator : MonoBehaviour
             {
                 openConnections.RemoveAt(connectionIndex);
                 Debug.Log($"Dead end at {currentConnection.transform.position}");
+                genAttempts++;
+            }
+            if (genAttempts >= maxGenAttempts)
+            {
+                Debug.Log("Max generation attempts reached. Stopping generation.");
+                RegenerateMaze();
+                break;  // Exit the loop if max attempts are reached
             }
         }
 
@@ -76,7 +93,7 @@ public class MazeGenerator : MonoBehaviour
             if (chunkPrefabs.Contains(singleChunk))
             {
                 Debug.Log($"Single chunk {singleChunk.name} not placed.");
-                GenerateMaze(maxDepth); // Regenerate if any single chunk is not placed
+                RegenerateMaze(); // Regenerate if any single chunk is not placed
                 return; // Exit the method to avoid further processing
             }
         }
@@ -97,7 +114,7 @@ public class MazeGenerator : MonoBehaviour
             {
                 // Pick a random connection point.
                 exitConnection = randomConnections[Random.Range(0, randomConnections.Length)];
-                ConnectionPoint enemySpawnConnection = randomConnections[Random.Range(0, randomConnections.Length)];
+                enemySpawnConnection = randomConnections[Random.Range(0, randomConnections.Length)];
 
                 // Find a connection point for the exit
                 while (exitConnection.DeadEndPrefab.activeSelf == false && attempts < maxAttempts)
@@ -119,7 +136,6 @@ public class MazeGenerator : MonoBehaviour
                     attempts++;
                 }
                 SpawnPlayer();
-                StartCoroutine(SpawnEnemyAfterDelay(enemySpawnConnection, enemySpawnDelay));
             }
         }
     }
@@ -216,9 +232,19 @@ public class MazeGenerator : MonoBehaviour
 
     public void RegenerateMaze()
     {
+        if (regenAttempts >= 3)
+        {
+            Debug.Log("Max regeneration attempts reached. Stopping regeneration.");
+            return;  // Exit if max attempts are reached
+        }
+        regenAttempts++;
+
         GameObject existingPlayer = GameObject.FindWithTag("Player");
-        enemy.SetActive(false);
-        Destroy(enemy);
+        if (enemy != null)
+        {
+            Destroy(enemy);
+            enemy = null;
+        }
 
         // Clean up existing maze
         foreach (GameObject chunk in placedChunks)
@@ -232,6 +258,7 @@ public class MazeGenerator : MonoBehaviour
 
         // Generate new maze
         NavMesh.RemoveAllNavMeshData();
+        chunkPrefabs.Clear();
         GenerateMaze(maxDepth);
 
         if (existingPlayer != null)
@@ -248,7 +275,6 @@ public class MazeGenerator : MonoBehaviour
             {
                 controller.enabled = true;
             }
-
         }
     }
 

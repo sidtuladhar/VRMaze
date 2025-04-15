@@ -75,7 +75,7 @@ MonoBehaviour:
   visionAngle: 70
   killRange: 5
   normalSpeed: 4
-  chaseSpeed: 20
+  chaseSpeed: 10
   normalAcceleration: 4
   chaseAcceleration: 8
   walkingSound: {fileID: 8300000, guid: 79faebf778a43469499fd6c20f16de4c, type: 3}
@@ -89,7 +89,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 1
-  m_Speed: 20
+  m_Speed: 10
   m_Acceleration: 10
   avoidancePriority: 50
   m_AngularSpeed: 120

@@ -1265,8 +1265,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -407, y: 454}
-  m_SizeDelta: {x: 200, y: 50}
+  m_AnchoredPosition: {x: -407, y: 350}
+  m_SizeDelta: {x: 400, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1533756058
 MonoBehaviour:
@@ -1289,12 +1289,12 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_text: "You were put into a coma after a near-fatal moped accident last week.
-    Three days ago, your doctor let you out. However, he totally forgot to address
-    your transformed mental state. Your vision has changed and your anxieties have
-    been heightened. Returning back to campus has proven difficult as you grapple
-    with your new realities. \n\nAfter a late night of work in Basement 2, the power
-    goes out. You need to find a way out before your panic overpowers you...\n\nTurn
-    on your phone flashlight with f, wasd to move, mouse to look around... be careful!"
+    Three days ago, your doctor let you out. However, he forgot to address your transformed
+    mental state. Your vision has changed and your anxieties have been heightened.
+    Returning back to campus has proven difficult as you grapple with your new realities.
+    \n\nAfter a late night of work in Basement 2, the power goes out. You need to
+    find a way out before your panic overpowers you...\n\nTurn on your phone flashlight
+    with f, wasd to move, mouse to look around... be careful!"
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
   m_sharedMaterial: {fileID: -8022257101594604644, guid: b8716fe831685401ba0614cc44c572e9, type: 2}
@@ -1501,12 +1501,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_UiScaleMode: 0
+  m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1600, y: 800}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 0
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96

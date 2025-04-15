@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -63,32 +64,7 @@ public class GameManager : MonoBehaviour
         // Activate the entire Game Over UI object
         if (Death != null)
         {
-            StartCoroutine(FadeInObject(Death, fadeDuration));
+            SceneManager.LoadScene("Game Over");
         }
-    }
-
-    private IEnumerator FadeInObject(GameObject objectToFade, float duration)
-    {
-        CanvasGroup canvasGroup = objectToFade.GetComponent<CanvasGroup>();
-        if (canvasGroup == null)
-        {
-            Debug.LogError($"FadeInObject Error: GameObject '{objectToFade.name}' is missing a CanvasGroup component!");
-            yield break; // Stop if no CanvasGroup
-        }
-
-        canvasGroup.alpha = 0.0f;
-        objectToFade.SetActive(true); // Activate the object now
-
-
-        float timer = 0f;
-        while (timer < duration)
-        {
-            timer += Time.unscaledDeltaTime;
-            canvasGroup.alpha = Mathf.Clamp01(timer / duration);
-            yield return null;
-        }
-
-        // Ensure it's fully opaque at the end
-        canvasGroup.alpha = 1f;
     }
 }
