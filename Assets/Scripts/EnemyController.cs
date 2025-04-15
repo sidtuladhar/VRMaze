@@ -166,7 +166,7 @@ public class EnemyController : MonoBehaviour
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
 
-        if (angle <= visionAngle && distanceToPlayer <= detectionRange && flashlightSystem.isOn)
+        if (angle <= visionAngle && distanceToPlayer <= detectionRange)
         {
 
             // Cast multiple rays at slightly different positions
@@ -181,7 +181,7 @@ public class EnemyController : MonoBehaviour
             Vector3[] rayDirections = new Vector3[] {
                 centerRay,
                 leftRay,
-                rightRay
+                rightRay,
             };
 
             foreach (Vector3 direction in rayDirections)
