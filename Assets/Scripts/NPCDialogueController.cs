@@ -60,6 +60,7 @@ public class NPCDialogueController : MonoBehaviour
     public AudioSource audioSource;
     public AudioClip smallTalkClip;
     public AudioClip mediumTalkClip;
+    public AudioClip buttonClickClip;
 
     [Header("NPC Settings")]
     public float interactionRadius = 5f;
@@ -191,6 +192,12 @@ public class NPCDialogueController : MonoBehaviour
 
         if (isProcessing) return;
         isProcessing = true;
+
+        //Play button click sound if set
+        if (audioSource != null && buttonClickClip != null)
+        {
+            audioSource.PlayOneShot(buttonClickClip);
+        }
 
         if (string.IsNullOrEmpty(currentOptions[index]))
         {
