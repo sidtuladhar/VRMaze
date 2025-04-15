@@ -77,7 +77,7 @@ MonoBehaviour:
   normalSpeed: 4
   chaseSpeed: 20
   normalAcceleration: 4
-  chaseAcceleration: 15
+  chaseAcceleration: 8
   walkingSound: {fileID: 8300000, guid: 79faebf778a43469499fd6c20f16de4c, type: 3}
 --- !u!195 &1128649611258098478
 NavMeshAgent:

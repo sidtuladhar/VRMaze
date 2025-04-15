@@ -1782,6 +1782,7 @@ GameObject:
   - component: {fileID: 7186755078004200832}
   - component: {fileID: 4288794558129974344}
   - component: {fileID: 8617189524766208912}
+  - component: {fileID: 3008503345078231763}
   m_Layer: 0
   m_Name: dez
   m_TagString: Untagged
@@ -1851,6 +1852,36 @@ CapsuleCollider:
   m_Height: 1.9204968
   m_Direction: 1
   m_Center: {x: 0.001043394, y: 0.8305474, z: 0}
+--- !u!114 &3008503345078231763
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7221775433288064794}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7d4c99b0e7e13449f92dfb45a4c5258a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dialogueUI: {fileID: 0}
+  reputationText: {fileID: 0}
+  npcResponseText: {fileID: 0}
+  responseButtons: []
+  responseButtonTexts: []
+  audioSource: {fileID: 0}
+  smallTalkClip: {fileID: 0}
+  mediumTalkClip: {fileID: 0}
+  buttonClickClip: {fileID: 0}
+  interactionRadius: 5
+  systemPrompt: 
+  initialNPCResponses: []
+  interactions: 0
+  cooldownTime: 120
+  maxAttempts: 10
+  maxReputation: 10
+  rotationSpeed: 180
+  conversationHistory: []
 --- !u!1 &7259037975841204248
 GameObject:
   m_ObjectHideFlags: 0

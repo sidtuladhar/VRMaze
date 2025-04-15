@@ -652,7 +652,7 @@ MonoBehaviour:
   interactions: 0
   cooldownTime: 30
   maxAttempts: 10
-  maxReputation: 5
+  maxReputation: 3
   rotationSpeed: 180
   conversationHistory: []
 --- !u!82 &622832730780740344

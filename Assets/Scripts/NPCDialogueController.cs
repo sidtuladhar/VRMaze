@@ -345,7 +345,7 @@ public class NPCDialogueController : MonoBehaviour
             HttpResponseMessage response = null;
             for (int attempt = 1; attempt <= 3; attempt++)
             {
-                using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(10)))
+                using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(25)))
                 {
                     try
                     {
@@ -469,7 +469,7 @@ public class NPCDialogueController : MonoBehaviour
         npcResponseText.text = currentNPCLine;
         StartCoroutine(HandleInitialDialogue(currentNPCLine));
     }
-    private System.Collections.IEnumerator InteractionCooldown()
+    private IEnumerator InteractionCooldown()
     {
         yield return new WaitForSeconds(cooldownTime);
 
