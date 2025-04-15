@@ -12,9 +12,10 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> singleChunkPrefabs;  // Chunks that will only be used once
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject enemyPrefab;
-    [SerializeField] private Material exitMaterial; // Assign the glowing material in inspector
+    [SerializeField] private Material exitMaterial;
+    [SerializeField] private GameObject exitPrefab;
     [SerializeField] private float enemySpawnDelay = 30f;
-    [SerializeField] private int maxDepth = 20;  // Maximum recursion depth
+    [SerializeField] private int maxDepth = 20;
 
     private List<GameObject> chunkPrefabs = new List<GameObject>();
     private int currentDepth = 0;
@@ -23,6 +24,7 @@ public class MazeGenerator : MonoBehaviour
     private GameObject enemy;
     private ConnectionPoint exitConnection;
     private ConnectionPoint enemySpawnConnection;
+    private GameObject exitInstance;
 
     private int regenAttempts = 0;
 
@@ -30,6 +32,12 @@ public class MazeGenerator : MonoBehaviour
     {
         GenerateMaze(maxDepth);
         StartCoroutine(SpawnEnemyAfterDelay(enemySpawnConnection, enemySpawnDelay));
+        Transform oldDeadEndTransform = exitConnection.DeadEndPrefab.transform;
+        Vector3 deadEndPosition = oldDeadEndTransform.position;
+        Quaternion deadEndRotation = oldDeadEndTransform.rotation;
+
+        Destroy(exitConnection.DeadEndPrefab);
+        exitInstance = Instantiate(exitPrefab, deadEndPosition, deadEndRotation);
     }
 
     private void GenerateMaze(int maxDepth)
@@ -326,27 +334,17 @@ public class MazeGenerator : MonoBehaviour
         Destroy(enemy);
         enemy = null;
         // Play sound
+        exitPrefab.GetComponent<AudioSource>().Play();
 
-        if (exitConnection.DeadEndPrefab.TryGetComponent<MeshRenderer>(out var renderer))
+        if (!exitInstance.TryGetComponent<Collider>(out var triggerCollider))
         {
-            renderer.material = exitMaterial;
-            GameObject lightGO = new GameObject("ExitLight");
-            Light pointLight = lightGO.AddComponent<Light>();
-            pointLight.type = LightType.Point;
-            pointLight.range = 20f;
-            pointLight.intensity = 20f;
-            pointLight.color = exitMaterial.GetColor("_EmissionColor");
+            triggerCollider = exitInstance.AddComponent<BoxCollider>();
+        }
+        triggerCollider.isTrigger = true; // Make sure it's a trigger
 
-            // Parent and position the light
-            lightGO.transform.parent = exitConnection.DeadEndPrefab.transform;
-            lightGO.transform.localPosition = Vector3.forward * 0.5f;
-
-            if (!exitConnection.DeadEndPrefab.TryGetComponent<BoxCollider>(out var triggerCollider))
-            {
-                triggerCollider = exitConnection.DeadEndPrefab.AddComponent<BoxCollider>();
-            }
-            triggerCollider.isTrigger = true;
-            exitConnection.DeadEndPrefab.AddComponent<ExitTrigger>();
+        if (!exitInstance.TryGetComponent<ExitTrigger>(out _))
+        {
+            exitInstance.AddComponent<ExitTrigger>();
         }
     }
 }

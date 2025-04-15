@@ -413,6 +413,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 1031318685813333101, guid: 7295590a4f2b94d6b99469d045741904, type: 3}
   enemyPrefab: {fileID: 1885044770559623788, guid: d3d1a6fa3e103484fbd444b701f5d60f, type: 3}
   exitMaterial: {fileID: 2100000, guid: e416c3dcef0dc4b67839199e8b6b293a, type: 2}
+  exitPrefab: {fileID: 7745338973464810453, guid: 56bdc12971cd1483a88a04663f828126, type: 3}
   enemySpawnDelay: 10
   maxDepth: 20
   placedChunks: []
@@ -690,7 +691,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4472e90008d444f6f9d89a306296b116, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Death: {fileID: 878915990}
   studentsHelped: 0
   studentsToHelp: 3
   fadeDuration: 3
