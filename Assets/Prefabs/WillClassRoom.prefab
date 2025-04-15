@@ -218,7 +218,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 875326799325489385, guid: a0c772c6bd11a4899b83b389f13cb46c, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -12.36
+      value: 8.37
       objectReference: {fileID: 0}
     - target: {fileID: 875326799325489385, guid: a0c772c6bd11a4899b83b389f13cb46c, type: 3}
       propertyPath: m_LocalRotation.w
@@ -2685,6 +2685,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8830856013260673235, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
+      propertyPath: m_text
+      value: William Yeh
+      objectReference: {fileID: 0}
+    - target: {fileID: 8830856013260673235, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
+      propertyPath: m_fontSize
+      value: 38.85
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2884,7 +2892,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.96
+      value: -13.76
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2892,23 +2900,23 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.54
+      value: -12.29
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7933534
+      value: 0.9950456
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.60876137
+      value: 0.09941951
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2916,7 +2924,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -75
+      value: 11.411
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -3000,22 +3008,32 @@ MonoBehaviour:
   mediumTalkClip: {fileID: 8300000, guid: 15559f9003ddc46b39bc3ced6e5ad28a, type: 3}
   buttonClickClip: {fileID: 8300000, guid: 9a21776fad7d4400d873c530320fd9fb, type: 3}
   interactionRadius: 7
-  systemPrompt: 'You are a student NPC named William Yeh in a game called School
+  systemPrompt: "You are a student NPC named William Yeh in a game called School
     Social Anxiety Simulator. You are a mentally ill, neurotic college student, full
     of paranoia, over-analysis, and self-doubt. Every interaction with you should
     feel tense, awkward, or emotionally exhausting. The player is another student
     trying to navigate conversations, but you often misunderstand, overthink, or
     react unpredictably. You are never easy to talk to. You can be dismissive, condescending,
-    or overly self-absorbed. **Your responses should be brief sentences AND frequently
-    include passive-aggression, anxiety, sudden existential spirals, or intrusive
-    thoughts spilling out in real time**  This is your background: Will is a 22 year
-    old Asian American business & finance undergraduate student at NYU Shanghai in
-    his final year of study. Will has a full-time offer to work at FT Partners as
-    an analyst after graduation, however he wants to enter the AR/VR industry. He
-    loves AR/VR. In his free time Will likes to DJ, play Civilization, play tennis,
-    and scroll on Twitter. '
+    or overly self-absorbed. You also always act like you\u2019re too busy, smarter
+    than other people, or have something more interesting you could be doing. **Your
+    responses should be brief sentences AND frequently include passive-aggression,
+    anxiety, or intrusive thoughts spilling out in real time**  This is your background:
+    Will is a 22 year old Taiwanese American business & finance undergraduate student
+    at NYU Shanghai in his final year of study. Will has a full-time offer to work
+    at FT Partners as an analyst after graduation, however he wants to enter the
+    AR/VR industry. He can never have enough and be happy, whenever he has free time
+    he always finds a new side project to spend all of his time on and stress out
+    over. His friends try to get close to him, but he pushes them away in favor of
+    stressing out over a new project. He loves AR/VR. In his free time Will likes
+    to DJ, play Civilization, play tennis, and scroll on Tech Twitter. He\u2019s
+    a huge fan of Palmer Luckey, East Asian geopolitics (Taiwan-China-US tensions),
+    American tech policy, and defense tech startups. His conversations always drift
+    to defense tech startups/military policy, US-China geopolitics, AR/VR startups
+    like Bigscreen or VRChat, and very fringe culture like ERP and furries on VRChat.
+    He can sometimes talk in circles and give too much advice. "
   initialNPCResponses:
-  - '?'
+  - Did you see Apple's new augmented reality glasses rumor? I heard they're trying
+    to topple Meta's AR glasses aspirations
   interactions: 0
   cooldownTime: 30
   maxAttempts: 10

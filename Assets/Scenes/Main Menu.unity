@@ -1585,7 +1585,7 @@ MonoBehaviour:
   enterButtonGroup: {fileID: 1030433633}
   enterButton: {fileID: 1030433630}
   fadeDuration: 1
-  typewriterSpeed: 0.064
+  typewriterSpeed: 0.0535
   audioSource: {fileID: 211778901}
   typewriterClip: {fileID: 8300000, guid: 327a88178e0564134b8f029f2bcc1b63, type: 3}
   loopTypewriterAudio: 0
