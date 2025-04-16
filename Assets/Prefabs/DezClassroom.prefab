@@ -524,6 +524,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6981585936998441923 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7086845026522680806, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
+  m_PrefabInstance: {fileID: 196499677695667749}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!224 &8174841341342238212 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8343135502616406049, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
@@ -1690,7 +1701,7 @@ PrefabInstance:
     - target: {fileID: 3008503345078231763, guid: 6d8aaafbd8d294cee91c0b196003fa65, type: 3}
       propertyPath: reputationText
       value: 
-      objectReference: {fileID: 5433507849311455382}
+      objectReference: {fileID: 6981585936998441923}
     - target: {fileID: 3008503345078231763, guid: 6d8aaafbd8d294cee91c0b196003fa65, type: 3}
       propertyPath: buttonClickClip
       value: 

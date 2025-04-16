@@ -24,4 +24,10 @@ public class doorOpen : MonoBehaviour
                 audioSource.Play();
         }
     }
+
+    public void playSound()
+    {
+        if (audioSource)
+            audioSource.Play();
+    }
 }

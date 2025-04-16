@@ -38,6 +38,7 @@ public class MazeGenerator : MonoBehaviour
 
         Destroy(exitConnection.DeadEndPrefab);
         exitInstance = Instantiate(exitPrefab, deadEndPosition, deadEndRotation);
+        exitInstance.transform.parent = transform;
     }
 
     private void GenerateMaze(int maxDepth)
@@ -333,8 +334,17 @@ public class MazeGenerator : MonoBehaviour
     {
         Destroy(enemy);
         enemy = null;
-        // Play sound
-        exitPrefab.GetComponent<AudioSource>().Play();
+
+        AudioSource audioSource = exitInstance.GetComponentInChildren<AudioSource>();
+        if (audioSource != null)
+        {
+            audioSource.Play();
+        }
+        Animator animator = exitInstance.GetComponentInChildren<Animator>();
+        if (animator != null)
+        {
+            animator.SetTrigger("Open");
+        }
 
         if (!exitInstance.TryGetComponent<Collider>(out var triggerCollider))
         {

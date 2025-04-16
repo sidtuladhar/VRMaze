@@ -345,7 +345,7 @@ public class NPCDialogueController : MonoBehaviour
             HttpResponseMessage response = null;
             for (int attempt = 1; attempt <= 3; attempt++)
             {
-                using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(25)))
+                using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(60)))
                 {
                     try
                     {

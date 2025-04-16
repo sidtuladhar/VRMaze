@@ -73,7 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   detectionRange: 15
   visionAngle: 70
-  killRange: 5
+  killRange: 2.5
   normalSpeed: 4
   chaseSpeed: 10
   normalAcceleration: 4

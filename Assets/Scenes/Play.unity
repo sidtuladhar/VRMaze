@@ -414,7 +414,7 @@ MonoBehaviour:
   enemyPrefab: {fileID: 1885044770559623788, guid: d3d1a6fa3e103484fbd444b701f5d60f, type: 3}
   exitMaterial: {fileID: 2100000, guid: e416c3dcef0dc4b67839199e8b6b293a, type: 2}
   exitPrefab: {fileID: 7745338973464810453, guid: 56bdc12971cd1483a88a04663f828126, type: 3}
-  enemySpawnDelay: 10
+  enemySpawnDelay: 60
   maxDepth: 20
   placedChunks: []
 --- !u!4 &407894747
