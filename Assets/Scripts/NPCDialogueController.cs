@@ -335,35 +335,35 @@ public class NPCDialogueController : MonoBehaviour
 
         string json = JsonConvert.SerializeObject(requestBody);
 
-            var content = new StringContent(json, Encoding.UTF8, "application/json");
+        var content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = null;
-            for (int attempt = 1; attempt <= 3; attempt++)
+        HttpResponseMessage response = null;
+        for (int attempt = 1; attempt <= 3; attempt++)
+        {
+            using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(90)))
             {
-                using (var cts = new CancellationTokenSource(TimeSpan.FromSeconds(60)))
+                try
                 {
-                    try
-                    {
-                        response = await client.PostAsync(OpenAiApiUrl, content, cts.Token);
-                        string responseBody = await response.Content.ReadAsStringAsync();
+                    response = await client.PostAsync(OpenAiApiUrl, content, cts.Token);
+                    string responseBody = await response.Content.ReadAsStringAsync();
 
-                        if (response.IsSuccessStatusCode)
-                        {
-                            var data = JsonConvert.DeserializeObject<ChatGPTResponse>(responseBody);
-                            string reply = data.choices[0].message.content.Trim();
-
-                            Debug.Log($"[API Response] Raw: {reply}");
-                            return ParseChatGPTResponse(reply);
-                        }
-                    }
-                    catch (HttpRequestException e)
+                    if (response.IsSuccessStatusCode)
                     {
-                        Debug.LogError($"[API] Exception: {e.Message}");
-                        return ("Error: Exception", new string[3], 0);
+                        var data = JsonConvert.DeserializeObject<ChatGPTResponse>(responseBody);
+                        string reply = data.choices[0].message.content.Trim();
+
+                        Debug.Log($"[API Response] Raw: {reply}");
+                        return ParseChatGPTResponse(reply);
                     }
                 }
-                Debug.Log("retrying API");
+                catch (HttpRequestException e)
+                {
+                    Debug.LogError($"[API] Exception: {e.Message}");
+                    return ("Error: Exception", new string[3], 0);
+                }
             }
+            Debug.Log("retrying API");
+        }
         return ("Everything broke", new string[3], 0);
     }
 

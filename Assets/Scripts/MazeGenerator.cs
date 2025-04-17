@@ -5,6 +5,7 @@ using System.Collections;
 using Unity.AI.Navigation;
 using System.Linq;
 using UnityEngine.AI;
+using Unity.XR.CoreUtils;
 
 public class MazeGenerator : MonoBehaviour
 {
@@ -241,9 +242,9 @@ public class MazeGenerator : MonoBehaviour
 
     public void RegenerateMaze()
     {
-        if (regenAttempts >= 3)
+        if (regenAttempts >= 100)
         {
-            Debug.Log("Max regeneration attempts reached. Stopping regeneration.");
+            Debug.Log($"Max regeneration attempts reached: {regenAttempts}");
             return;  // Exit if max attempts are reached
         }
         regenAttempts++;
@@ -335,6 +336,8 @@ public class MazeGenerator : MonoBehaviour
         Destroy(enemy);
         enemy = null;
 
+        exitInstance.GetNamedChild("openDoor").GetComponent<BoxCollider>().isTrigger = true;
+
         AudioSource audioSource = exitInstance.GetComponentInChildren<AudioSource>();
         if (audioSource != null)
         {
@@ -344,17 +347,6 @@ public class MazeGenerator : MonoBehaviour
         if (animator != null)
         {
             animator.SetTrigger("Open");
-        }
-
-        if (!exitInstance.TryGetComponent<Collider>(out var triggerCollider))
-        {
-            triggerCollider = exitInstance.AddComponent<BoxCollider>();
-        }
-        triggerCollider.isTrigger = true; // Make sure it's a trigger
-
-        if (!exitInstance.TryGetComponent<ExitTrigger>(out _))
-        {
-            exitInstance.AddComponent<ExitTrigger>();
         }
     }
 }
