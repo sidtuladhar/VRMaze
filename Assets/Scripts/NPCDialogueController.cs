@@ -28,19 +28,19 @@ public class ChatMessage
     }
 }
 
-[System.Serializable]
+[Serializable]
 public class ChatGPTResponse
 {
     public Choice[] choices;
 }
 
-[System.Serializable]
+[Serializable]
 public class Choice
 {
     public Message message;
 }
 
-[System.Serializable]
+[Serializable]
 public class Message
 {
     public string role;
@@ -67,15 +67,10 @@ public class NPCDialogueController : MonoBehaviour
     public string systemPrompt;
     public string[] initialNPCResponses;
     public int interactions = 0;
-
-    // cool down for 2 mins, 10 to win, 10 attempts
     public float cooldownTime = 120f;
     private bool isOnCooldown = false;
-
     public int maxAttempts = 10;
     public int maxReputation = 10;
-
-
     public float rotationSpeed = 180f;
 
     public List<ChatMessage> conversationHistory = new List<ChatMessage>();
@@ -382,7 +377,6 @@ public class NPCDialogueController : MonoBehaviour
 
         try
         {
-            // 1. Define an anonymous type matching the expected JSON structure
             var definition = new
             {
                 npc_dialogue = "",
@@ -394,10 +388,8 @@ public class NPCDialogueController : MonoBehaviour
                 }
             };
 
-            // 2. Attempt to deserialize the JSON string
             var parsedJson = JsonConvert.DeserializeAnonymousType(fullResponse, definition);
 
-            // 3. Process the parsed data if successful
             if (parsedJson != null && parsedJson.dialogue_options != null && parsedJson.dialogue_options.Length > 0 && parsedJson.npc_dialogue != null)
             {
                 npcLine = parsedJson.npc_dialogue ?? "NPC dialogue missing in JSON.";
