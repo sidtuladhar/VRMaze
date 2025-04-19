@@ -68,11 +68,8 @@ public class MazeGenerator : MonoBehaviour
         ConnectionPoint[] connections = firstInstance.GetComponentsInChildren<ConnectionPoint>();
         openConnections.AddRange(connections);
 
-        int maxGenAttempts = 10;  // Prevent infinite loop
         int genAttempts = 0;
-
-        // Start recursive generation with depth limit
-        while (openConnections.Count > 0 && currentDepth < maxDepth)
+        while (openConnections.Count > 0 && currentDepth < maxDepth && genAttempts < 100)
         {
             int connectionIndex = Random.Range(0, openConnections.Count);
             ConnectionPoint currentConnection = openConnections[connectionIndex];
@@ -85,20 +82,8 @@ public class MazeGenerator : MonoBehaviour
             }
             else
             {
-                Debug.Log($"Dead end at {currentConnection.transform.position}");
                 genAttempts++;
             }
-            if (genAttempts >= maxGenAttempts)
-            {
-                Debug.Log("Max generation attempts reached. Stopping generation.");
-                RegenerateMaze();
-                break;  // Exit the loop if max attempts are reached
-            }
-        }
-
-        if (currentDepth >= maxDepth)
-        {
-            Debug.Log($"Reached max depth: {maxDepth}.");
         }
 
         GetComponent<NavMeshSurface>().BuildNavMesh();
@@ -236,7 +221,6 @@ public class MazeGenerator : MonoBehaviour
                 // If the chunk is a single use chunk, remove it from the list
                 if (singleChunkPrefabs.Contains(randomChunk))
                 {
-                    Debug.Log("Removing single chunk" + chunkPrefabs.Count);
                     chunkPrefabs.Remove(randomChunk);
                 }
                 return true;
