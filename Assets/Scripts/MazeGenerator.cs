@@ -32,6 +32,7 @@ public class MazeGenerator : MonoBehaviour
     void Start()
     {
         GenerateMaze(maxDepth);
+        SpawnPlayer();
         StartCoroutine(SpawnEnemyAfterDelay(enemySpawnConnection, enemySpawnDelay));
         Transform oldDeadEndTransform = exitConnection.DeadEndPrefab.transform;
         Vector3 deadEndPosition = oldDeadEndTransform.position;
@@ -39,11 +40,16 @@ public class MazeGenerator : MonoBehaviour
 
         Destroy(exitConnection.DeadEndPrefab);
         exitInstance = Instantiate(exitPrefab, deadEndPosition, deadEndRotation);
-        exitInstance.transform.parent = transform;
     }
 
     private void GenerateMaze(int maxDepth)
     {
+        openConnections.Clear();
+        foreach (GameObject chunk in placedChunks)
+        {
+            Destroy(chunk);
+        }
+        placedChunks.Clear();
         currentDepth = 0;
 
         chunkPrefabs.AddRange(multiChunkPrefabs);
@@ -70,15 +76,15 @@ public class MazeGenerator : MonoBehaviour
         {
             int connectionIndex = Random.Range(0, openConnections.Count);
             ConnectionPoint currentConnection = openConnections[connectionIndex];
+            GameObject randomChunk = chunkPrefabs[Random.Range(0, chunkPrefabs.Count)];
 
-            if (TestConnection(currentConnection))
+            if (TestConnection(randomChunk, currentConnection))
             {
                 currentDepth++;  // Increment depth when adding a new chunk
                 openConnections.RemoveAt(connectionIndex);
             }
             else
             {
-                openConnections.RemoveAt(connectionIndex);
                 Debug.Log($"Dead end at {currentConnection.transform.position}");
                 genAttempts++;
             }
@@ -108,6 +114,15 @@ public class MazeGenerator : MonoBehaviour
             }
         }
 
+        if (openConnections.Count == 0)
+        {
+            Debug.Log("No open connections left. Regenerating maze.");
+            RegenerateMaze();
+            return; // Exit the method to avoid further processing
+        }
+        Debug.Log($"Open connections: {openConnections.Count}");
+        exitConnection = openConnections[Random.Range(0, openConnections.Count)];
+
         // Pick exit
         if (placedChunks.Count > 0)
         {
@@ -123,17 +138,7 @@ public class MazeGenerator : MonoBehaviour
             if (randomConnections.Length > 0)
             {
                 // Pick a random connection point.
-                exitConnection = randomConnections[Random.Range(0, randomConnections.Length)];
                 enemySpawnConnection = randomConnections[Random.Range(0, randomConnections.Length)];
-
-                // Find a connection point for the exit
-                while (exitConnection.DeadEndPrefab.activeSelf == false && attempts < maxAttempts)
-                {
-                    exitConnection = randomConnections[Random.Range(0, randomConnections.Length)];
-                    randomChunk = placedChunks[Random.Range(0, placedChunks.Count)];
-                    randomConnections = randomChunk.GetComponentsInChildren<ConnectionPoint>();
-                    attempts++;
-                }
 
                 // Find a connection point for the enemy spawn
                 float distanceToOrigin = enemySpawnConnection.transform.position.magnitude;
@@ -145,15 +150,12 @@ public class MazeGenerator : MonoBehaviour
                     distanceToOrigin = enemySpawnConnection.transform.position.magnitude;
                     attempts++;
                 }
-                SpawnPlayer();
             }
         }
     }
 
-    private bool TestConnection(ConnectionPoint connectionPoint)
+    private bool TestConnection(GameObject randomChunk, ConnectionPoint connectionPoint)
     {
-        GameObject randomChunk = chunkPrefabs[Random.Range(0, chunkPrefabs.Count)];
-
         Vector3 targetPosition = transform.TransformPoint(connectionPoint.transform.position) + connectionPoint.connectionOffset;
 
         ConnectionPoint[] testChunkConnections = randomChunk.GetComponentsInChildren<ConnectionPoint>();
@@ -165,25 +167,25 @@ public class MazeGenerator : MonoBehaviour
         Vector3 alignmentOffset = targetPosition - matchPosition;
 
         int[] rotations = { 0, 1, 2, 3 };
-        rotations = rotations.OrderBy(x => Random.value).ToArray();
+        System.Random rng = new System.Random();
+        rotations = rotations.OrderBy(x => rng.Next()).ToArray();
 
         foreach (int rotation in rotations)
         {
-
             GameObject testChunk2 = Instantiate(randomChunk);
 
             testChunk2.transform.position = alignmentOffset;
+
+            Quaternion rot = Quaternion.AngleAxis(90f * rotation, Vector3.up);
 
             ConnectionPoint[] tempConnectionPoints = testChunk2.GetComponentsInChildren<ConnectionPoint>();
 
             foreach (ConnectionPoint conn in tempConnectionPoints)
             {
-                Quaternion rot = Quaternion.AngleAxis(90f * rotation, Vector3.up);
                 conn.connectionOffset = rot * conn.connectionOffset;
             }
 
             testChunk2.transform.RotateAround(targetPosition, Vector3.up, 90f * rotation);
-            Debug.Log(testChunk2.transform.position);
 
             Collider testCollider = testChunk2.GetComponent<Collider>();
             bool collisionFound = false;
@@ -210,12 +212,15 @@ public class MazeGenerator : MonoBehaviour
             }
             if (!collisionFound) // If no collision was found, place the chunk
             {
-
                 testChunk2.transform.parent = transform;
                 placedChunks.Add(testChunk2);
                 var testChunk2Connections = testChunk2.GetComponentsInChildren<ConnectionPoint>();
-                var newConnections = testChunk2Connections.Where(p => p != testConnection); // Get all connections except the one we used
-                openConnections.AddRange(newConnections); // Add new connections to the list
+
+                Vector3 tempConnectionOffset = rot * testConnection.connectionOffset;
+                testChunk2Connections = testChunk2Connections
+                    .Where(conn => conn.connectionOffset != tempConnectionOffset).ToArray();
+
+                openConnections.AddRange(testChunk2Connections); // Add new connections to the list
                 if (connectionPoint.DeadEndPrefab != null)
                 {
                     connectionPoint.DeadEndPrefab.SetActive(false);
@@ -242,7 +247,7 @@ public class MazeGenerator : MonoBehaviour
 
     public void RegenerateMaze()
     {
-        if (regenAttempts >= 100)
+        if (regenAttempts >= 10)
         {
             Debug.Log($"Max regeneration attempts reached: {regenAttempts}");
             return;  // Exit if max attempts are reached
@@ -297,7 +302,7 @@ public class MazeGenerator : MonoBehaviour
         }
 
         Vector3 spawnPosition = placedChunks[0].transform.position + new Vector3(0, 1f, 0);
-        GameObject player = Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+        Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
     }
 
     public GameObject SpawnEnemy(ConnectionPoint spawnPoint)
@@ -307,10 +312,8 @@ public class MazeGenerator : MonoBehaviour
             Debug.LogError("Enemy prefab not assigned!");
         }
 
-        // Get the position of the connection point
         Vector3 spawnPosition = spawnPoint.transform.position;
 
-        // Instantiate the enemy at the connection point position
         GameObject enemy = Instantiate(enemyPrefab, spawnPosition, Quaternion.identity);
         enemy.transform.parent = transform;
         return enemy;
@@ -323,7 +326,7 @@ public class MazeGenerator : MonoBehaviour
 
         // Check if the script/object is still active before spawning
         // (e.g., if RegenerateMaze was called during the delay)
-        if (this != null && this.enabled && spawnPoint != null)
+        if (this != null && enabled && spawnPoint != null)
         {
             Debug.Log($"Timer finished. Spawning enemy at {spawnPoint.transform.position}...");
             // Call the original SpawnEnemy function and store the reference

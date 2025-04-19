@@ -403,9 +403,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   multiChunkPrefabs:
   - {fileID: 4503286144166248192, guid: 5988f40e7f3974fdca221335d5d2d3f7, type: 3}
-  - {fileID: 8915251857623294207, guid: ed7d7f6d7a54d4e8297f70740280d9e2, type: 3}
   - {fileID: 8995545508071917730, guid: 09789488041b5471c99785bf4b60c46e, type: 3}
   - {fileID: 4503286144166248192, guid: f4c6746b905594352b3821fcd280314e, type: 3}
+  - {fileID: 8915251857623294207, guid: ed7d7f6d7a54d4e8297f70740280d9e2, type: 3}
   singleChunkPrefabs:
   - {fileID: 4503286144166248192, guid: 729459a78e4e749079dabe97bb1f049c, type: 3}
   - {fileID: 4503286144166248192, guid: a12abcc7664ee48b5bd4d2cc7f50b5e8, type: 3}
@@ -415,7 +415,7 @@ MonoBehaviour:
   exitMaterial: {fileID: 2100000, guid: e416c3dcef0dc4b67839199e8b6b293a, type: 2}
   exitPrefab: {fileID: 7745338973464810453, guid: 56bdc12971cd1483a88a04663f828126, type: 3}
   enemySpawnDelay: 60
-  maxDepth: 20
+  maxDepth: 10
   placedChunks: []
 --- !u!4 &407894747
 Transform:
