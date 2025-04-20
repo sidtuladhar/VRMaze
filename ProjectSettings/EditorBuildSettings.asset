@@ -6,17 +6,18 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/Main Menu.unity
+    guid: 885a05117f55743a4a0504413ebdb7b0
+  - enabled: 1
     path: Assets/Scenes/Play.unity
     guid: 99c9720ab356a0642a771bea13969a05
   - enabled: 1
     path: Assets/Scenes/Game Over.unity
     guid: 434f5eb6ab8864d89a1d61ebb1f87972
   - enabled: 1
-    path: Assets/Scenes/Main Menu.unity
-    guid: 885a05117f55743a4a0504413ebdb7b0
-  - enabled: 1
     path: Assets/Scenes/You Won.unity
     guid: 4d0ba1f9637ef40ef965b32b085c76bd
   m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 45481722739de4767b754ed8844657a0, type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 87d2815f3e8ef4b8f99d9eff50117151, type: 2}
   m_UseUCBPForAssetBundles: 0
