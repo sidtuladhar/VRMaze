@@ -27,7 +27,6 @@ public class SceneLoader : MonoBehaviour
         {
             Debug.LogWarning("SceneLoader: No scene name set in the Inspector.");
         }
-        Debug.Log("Clicked");
     }
 
     private void ActuallyLoadScene()

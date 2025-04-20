@@ -1574,14 +1574,19 @@ MonoBehaviour:
   mainMenuText: {fileID: 786021344}
   beginButton: {fileID: 185305824}
   backstoryText: {fileID: 1533756058}
-  backstoryContent: "You were put into a coma after a near-fatal moped accident last
-    week. Three days ago, your doctor let you out. However, he totally forgot to
-    address your transformed mental state. Your vision has changed and your anxieties
-    have been heightened. Returning back to campus has proven difficult as you grapple
-    with your new realities. \n\nAfter a late night of midterm cramming in Basement
-    2, the power goes out. Your sleep deprivation and stress has affected your perception
-    of reality. You need to find a way out before your panic overpowers you...\n\nTurn
-    on your phone flashlight with f, wasd to move, mouse to look around... be careful!"
+  backstoryContent: 'You were put into a coma after a near-fatal moped accident last
+    week. Three days ago, your doctor let you out. However, your vision has changed
+    and your anxieties have been heightened. Returning back to campus has proven
+    difficult as you grapple with your new realities.
+
+
+    After a late night of
+    midterm cramming in Basement 2, the power goes out. You need to find a way out
+    before your panic overpowers you...
+
+
+    Turn on your phone flashlight with
+    f, wasd to move, mouse to look around... be careful!'
   enterButtonGroup: {fileID: 1030433633}
   enterButton: {fileID: 1030433630}
   fadeDuration: 1
