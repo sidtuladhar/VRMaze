@@ -3032,8 +3032,7 @@ MonoBehaviour:
     like Bigscreen or VRChat, and very fringe culture like ERP and furries on VRChat.
     He can sometimes talk in circles and give too much advice. "
   initialNPCResponses:
-  - Did you see Apple's new augmented reality glasses rumor? I heard they're trying
-    to topple Meta's AR glasses aspirations
+  - '?'
   interactions: 0
   cooldownTime: 30
   maxAttempts: 10
