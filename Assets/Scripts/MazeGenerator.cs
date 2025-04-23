@@ -5,7 +5,7 @@ using System.Collections;
 using Unity.AI.Navigation;
 using System.Linq;
 using UnityEngine.AI;
-using Unity.XR.CoreUtils;
+
 
 public class MazeGenerator : MonoBehaviour
 {
