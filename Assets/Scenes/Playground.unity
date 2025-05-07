@@ -11791,10 +11791,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.11489868
-  m_Height: 1.053299
+  m_Radius: 0.22259855
+  m_Height: 1.2969153
   m_Direction: 1
-  m_Center: {x: 0, y: -0.46587825, z: 0.0043992996}
+  m_Center: {x: 0, y: -0.43722594, z: 0.0073304176}
 --- !u!4 &927477673
 Transform:
   m_ObjectHideFlags: 0
