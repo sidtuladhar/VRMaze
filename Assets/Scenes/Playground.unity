@@ -10683,7 +10683,7 @@ MonoBehaviour:
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
   _pointableElement: {fileID: 844424928}
-  _rigidbody: {fileID: 1244236439}
+  _rigidbody: {fileID: 927477671}
   _grabSource: {fileID: 0}
   _useClosestPointAsGrabSource: 0
   _releaseDistance: 0
@@ -10706,7 +10706,7 @@ MonoBehaviour:
   _maxSelectingInteractors: -1
   _data: {fileID: 0}
   _pointableElement: {fileID: 844424928}
-  _rigidbody: {fileID: 1244236439}
+  _rigidbody: {fileID: 927477671}
   _physicsGrabbable: {fileID: 0}
   _resetGrabOnGrabsUpdated: 1
   _scoringModifier:
@@ -10749,7 +10749,7 @@ MonoBehaviour:
   _twoGrabTransformer: {fileID: 0}
   _targetTransform: {fileID: 1244236444}
   _maxGrabPoints: -1
-  _rigidbody: {fileID: 1244236439}
+  _rigidbody: {fileID: 927477671}
   _kinematicWhileSelected: 1
   _throwWhenUnselected: 1
 --- !u!114 &844424929
@@ -11791,10 +11791,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.22259855
+  m_Radius: 0.32552677
   m_Height: 1.2969153
   m_Direction: 1
-  m_Center: {x: 0, y: -0.43722594, z: 0.0073304176}
+  m_Center: {x: -0.0025231242, y: -0.43722594, z: 0.006895542}
 --- !u!4 &927477673
 Transform:
   m_ObjectHideFlags: 0
@@ -18614,7 +18614,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2015248, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8100000, guid: ce816f2e6abb0504092c23ed9b970dfd, type: 3}
       propertyPath: m_Enabled
