@@ -47,7 +47,7 @@ public class Message
     public string content;
 }
 
-public class NPCDialogueController : MonoBehaviour
+public class XRNPCDialogueController : MonoBehaviour
 {
     [Header("UI Elements")]
     public GameObject dialogueUI;
@@ -136,6 +136,7 @@ public class NPCDialogueController : MonoBehaviour
             UnlockCursor();
 
             dialogueUI.SetActive(true);
+            PositionDialogueUI();
 
             if (reputation != maxReputation && interactions < maxAttempts && !isOnCooldown)
             {
@@ -477,4 +478,16 @@ public class NPCDialogueController : MonoBehaviour
         }
         Debug.Log("NPC cooldown finished. Interaction allowed.");
     }
+    void PositionDialogueUI()
+    {
+        if (player == null || dialogueUI == null) return;
+
+        Vector3 midpoint = (player.position + transform.position) / 2f + Vector3.up * 1.5f;
+        dialogueUI.transform.position = midpoint;
+
+        // Make UI face the player
+        dialogueUI.transform.LookAt(player);
+        dialogueUI.transform.Rotate(0, 180f, 0f); // Flip it to face correctly
+    }
+
 }
