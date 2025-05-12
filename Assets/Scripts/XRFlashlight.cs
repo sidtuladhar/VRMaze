@@ -46,6 +46,7 @@ public class XRFlashlight : MonoBehaviour
         if (grabbable == null || grabbable.SelectingPointsCount == 0)
         {
             previousTriggerPressed = false;
+            Debug.Log("No grabbable object selected.");
             return;
         }
 
@@ -58,10 +59,12 @@ public class XRFlashlight : MonoBehaviour
         if (leftGrabbing && leftHand.TryGetFeatureValue(CommonUsages.triggerButton, out bool leftTrigger))
         {
             triggerPressed = leftTrigger;
+            Debug.Log("Left trigger pressed");
         }
         else if (rightGrabbing && rightHand.TryGetFeatureValue(CommonUsages.triggerButton, out bool rightTrigger))
         {
             triggerPressed = rightTrigger;
+            Debug.Log("Right trigger pressed");
         }
 
         // Toggle on trigger press
