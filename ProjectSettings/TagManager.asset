@@ -3,7 +3,19 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 3
-  tags: []
+  tags:
+  - QDSUIBackplateGradient
+  - QDSUIBorderlessButton
+  - QDSUIIcon
+  - QDSUISharedThemeColor
+  - QDSUISecondaryButton
+  - QDSUIToggleBorderlessButton
+  - QDSUITextSecondaryColor
+  - QDSUITooltip
+  - QDSUIToggleButton
+  - QDSUIToggleSwitch
+  - QDSUIAccentColor
+  - QDSUISection
   layers:
   - Default
   - TransparentFX
@@ -12,7 +24,7 @@ TagManager:
   - Water
   - UI
   - Maze
-  - 
+  - player
   - 
   - 
   - 

@@ -2698,104 +2698,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
---- !u!114 &440433184518266495 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8870224905031775805, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 9008858590269450306}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &1066544562666340451 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8343135502616406049, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
   m_PrefabInstance: {fileID: 9008858590269450306}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &2259801136575571364 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7086845026522680806, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 9008858590269450306}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &2518623525486898468 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6914740565878375782, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 9008858590269450306}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3807877991069535985 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5322597198801069747, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 9008858590269450306}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &4097602196483692307 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5032911486871797585, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 9008858590269450306}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!1 &6084238518016508525 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2984316013927148079, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 9008858590269450306}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &6482928242863489177 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2662218692158646491, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 9008858590269450306}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6698299443704771161 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2445673344465672731, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 9008858590269450306}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7078218554282709968 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2251526506698587026, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 9008858590269450306}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &9010481077779469447
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2947,9 +2854,6 @@ PrefabInstance:
       addedObject: {fileID: 4343067629513000126}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5826274352163250907}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 6555306745058768484}
   m_SourcePrefab: {fileID: 100100000, guid: 43570a1c0e828413793a81f7f6bcb628, type: 3}
 --- !u!1 &8212038837135078839 stripped
@@ -2980,65 +2884,6 @@ CapsuleCollider:
   m_Height: 2.4012485
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &5826274352163250907
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8212038837135078839}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d4c99b0e7e13449f92dfb45a4c5258a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogueUI: {fileID: 6084238518016508525}
-  reputationText: {fileID: 2259801136575571364}
-  npcResponseText: {fileID: 3807877991069535985}
-  responseButtons:
-  - {fileID: 440433184518266495}
-  - {fileID: 6482928242863489177}
-  - {fileID: 6698299443704771161}
-  responseButtonTexts:
-  - {fileID: 7078218554282709968}
-  - {fileID: 2518623525486898468}
-  - {fileID: 4097602196483692307}
-  audioSource: {fileID: 6555306745058768484}
-  smallTalkClip: {fileID: 8300000, guid: 1eb6b2bde780743378f2e78e134d1651, type: 3}
-  mediumTalkClip: {fileID: 8300000, guid: 15559f9003ddc46b39bc3ced6e5ad28a, type: 3}
-  buttonClickClip: {fileID: 8300000, guid: 9a21776fad7d4400d873c530320fd9fb, type: 3}
-  interactionRadius: 7
-  systemPrompt: "You are a student NPC named William Yeh in a game called School
-    Social Anxiety Simulator. You are a mentally ill, neurotic college student, full
-    of paranoia, over-analysis, and self-doubt. Every interaction with you should
-    feel tense, awkward, or emotionally exhausting. The player is another student
-    trying to navigate conversations, but you often misunderstand, overthink, or
-    react unpredictably. You are never easy to talk to. You can be dismissive, condescending,
-    or overly self-absorbed. You also always act like you\u2019re too busy, smarter
-    than other people, or have something more interesting you could be doing. **Your
-    responses should be max 20 words AND frequently include passive-aggression, anxiety,
-    or intrusive thoughts spilling out in real time**  This is your background: Will
-    is a 22 year old Taiwanese American business & finance undergraduate student
-    at NYU Shanghai in his final year of study. Will has a full-time offer to work
-    at FT Partners as an analyst after graduation, however he wants to enter the
-    AR/VR industry. He can never have enough and be happy, whenever he has free time
-    he always finds a new side project to spend all of his time on and stress out
-    over. His friends try to get close to him, but he pushes them away in favor of
-    stressing out over a new project. He loves AR/VR. In his free time Will likes
-    to DJ, play Civilization, play tennis, and scroll on Tech Twitter. He\u2019s
-    a huge fan of Palmer Luckey, East Asian geopolitics (Taiwan-China-US tensions),
-    American tech policy, and defense tech startups. His conversations always drift
-    to defense tech startups/military policy, US-China geopolitics, AR/VR startups
-    like Bigscreen or VRChat, and very fringe culture like ERP and furries on VRChat.
-    He can sometimes talk in circles and give too much advice. "
-  initialNPCResponses:
-  - '?'
-  interactions: 0
-  cooldownTime: 30
-  maxAttempts: 10
-  maxReputation: 3
-  rotationSpeed: 180
-  conversationHistory: []
 --- !u!82 &6555306745058768484
 AudioSource:
   m_ObjectHideFlags: 0
