@@ -552,9 +552,6 @@ PrefabInstance:
       addedObject: {fileID: 7674191825615350106}
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: aa4f7167bc7854383863f44fdceea95e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2302072557694713716}
-    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: aa4f7167bc7854383863f44fdceea95e, type: 3}
-      insertIndex: -1
       addedObject: {fileID: 622832730780740344}
   m_SourcePrefab: {fileID: 100100000, guid: aa4f7167bc7854383863f44fdceea95e, type: 3}
 --- !u!1 &1509350156508550976 stripped
@@ -585,76 +582,6 @@ CapsuleCollider:
   m_Height: 2.2278676
   m_Direction: 1
   m_Center: {x: 0, y: 0.66987455, z: 0}
---- !u!114 &2302072557694713716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1509350156508550976}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d4c99b0e7e13449f92dfb45a4c5258a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dialogueUI: {fileID: 538798381427790356}
-  reputationText: {fileID: 5497155574028891613}
-  npcResponseText: {fileID: 7479898628508278408}
-  responseButtons:
-  - {fileID: 6127436818646420998}
-  - {fileID: 784259740659699936}
-  - {fileID: 1144089322663223840}
-  responseButtonTexts:
-  - {fileID: 3544155551754159017}
-  - {fileID: 8207333369965854045}
-  - {fileID: 7766501036995757930}
-  audioSource: {fileID: 622832730780740344}
-  smallTalkClip: {fileID: 8300000, guid: 1eb6b2bde780743378f2e78e134d1651, type: 3}
-  mediumTalkClip: {fileID: 8300000, guid: 15559f9003ddc46b39bc3ced6e5ad28a, type: 3}
-  buttonClickClip: {fileID: 8300000, guid: 9a21776fad7d4400d873c530320fd9fb, type: 3}
-  interactionRadius: 7
-  systemPrompt: "You are a student NPC named Lawrence in a game called School Social
-    Anxiety Simulator. You are a mentally ill, neurotic college student, full of
-    paranoia, over-analysis, and self-doubt. Every interaction with you should feel
-    tense, awkward, or emotionally exhausting. The player is another student trying
-    to navigate conversations, but you often misunderstand, overthink, or react unpredictably.
-    You are never easy to talk to. You can be dismissive, condescending, or overly
-    self-absorbed. **Your responses should be max 20 words AND frequently include
-    passive-aggression, anxiety, sudden existential spirals, or intrusive thoughts
-    spilling out in real time**  This is your background: Lawrence is a 22 year old
-    Asian American computer science undergraduate student at NYU Shanghai in his
-    final year of study. He's working on a crypto FinTech startup called Henry Social
-    and is prioritizing a light academic workload to focus on building his startup.
-    His mind naturally leans to conversations about startups, cryptocurrency, fintech,
-    product features for his startup. He has a girlfriend named Kimi who is in New
-    York City, while he is residing currently in Shanghai. He despises being in Shanghai
-    currently, and wants to go back to New York City to focus on his startup and
-    be with his girlfriend.  Henry Social is crypto currency cash back platform,
-    similar to Honey Rewards, but instead of receiving discounts, you receive crypto
-    cashback in your Henry Social wallet. In the wallet, you can stake your cashback
-    rewards with Movement coin.  Sample Dialogue: Btw, do u guys know the best way
-    to accept commercial payments in WeChat / Alipay Btw, I\u2019m setting up payment
-    processing for Henry rn And I don\u2019t think ya\u2019ll r sufficiently bullish
-    on stablecoin infra Basically Solana & Base r the two frontrunners for this Infra.
-    Solana is the only one with a token. When Circle IPOs, that\u2019s another way
-    to get in Stablecoin txns effectively cut payment processing down. Right now
-    it\u2019s >3%. Stablecoin infra can cut that down to near zero Hey guys, do u
-    have access to Manus? Lol I just got access Wouldn\u2019t it be funny to do an
-    art piece where everyone scans their dicks and we 3d print them and put it on
-    the wall In my experience being in a 12h time difference w your cofounder is
-    the biggest cost Especially when we essentially do 50/50 on product direction
-    calls We r less agile cuz there\u2019s less time to jam FYI, Phil\u2019s friend
-    Pat (quit Microsoft this fall) is doing 100k in MRR now with his app Fithub They
-    starting building in summer They\u2019re an app that gives you nutrition insights
-    into your food."
-  initialNPCResponses:
-  - '?'
-  interactions: 0
-  cooldownTime: 30
-  maxAttempts: 10
-  maxReputation: 3
-  rotationSpeed: 180
-  conversationHistory: []
 --- !u!82 &622832730780740344
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1279,104 +1206,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
---- !u!1 &538798381427790356 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2984316013927148079, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 3319251742120228923}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &784259740659699936 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2662218692158646491, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 3319251742120228923}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &1144089322663223840 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2445673344465672731, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 3319251742120228923}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &3544155551754159017 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 2251526506698587026, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 3319251742120228923}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &5497155574028891613 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7086845026522680806, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 3319251742120228923}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &6127436818646420998 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 8870224905031775805, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 3319251742120228923}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!224 &6762326736820146202 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 8343135502616406049, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
   m_PrefabInstance: {fileID: 3319251742120228923}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7479898628508278408 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5322597198801069747, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 3319251742120228923}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &7766501036995757930 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5032911486871797585, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 3319251742120228923}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &8207333369965854045 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 6914740565878375782, guid: 321e8241a69c443e4b8b751bdff2103b, type: 3}
-  m_PrefabInstance: {fileID: 3319251742120228923}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &3340220732664799984
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -13,6 +13,7 @@ public class MazeGenerator : MonoBehaviour
     [SerializeField] private List<GameObject> singleChunkPrefabs;  // Chunks that will only be used once
     [SerializeField] private GameObject playerPrefab;
     [SerializeField] private GameObject enemyPrefab;
+    [SerializeField] private GameObject XRFlashlightPrefab;
     [SerializeField] private Material exitMaterial;
     [SerializeField] private GameObject exitPrefab;
     [SerializeField] private float enemySpawnDelay = 30f;
@@ -284,9 +285,16 @@ public class MazeGenerator : MonoBehaviour
             Debug.LogError("Player prefab not assigned!");
             return;
         }
+        if (XRFlashlightPrefab != null)
+        {
+            Debug.LogError("XRFlashlight prefab not assigned!");
+            return;
+        }
 
         Vector3 spawnPosition = placedChunks[0].transform.position + new Vector3(0, 1f, 0);
+        Vector3 flashlightPosition = spawnPosition + new Vector3(1, 0.5f, 0);
         Instantiate(playerPrefab, spawnPosition, Quaternion.identity);
+        Instantiate(XRFlashlightPrefab, flashlightPosition, Quaternion.identity);
     }
 
     public GameObject SpawnEnemy(ConnectionPoint spawnPoint)
