@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Collections;
 using System.Threading;
+using Oculus.Interaction;
 
 // Can be a class or struct. Serializable might be useful if you want to save/load history.
 [Serializable]
@@ -93,6 +94,8 @@ public class XRNPCDialogueController : MonoBehaviour
     private const string OpenAiApiUrl = "https://api.openai.com/v1/chat/completions";
     private static readonly HttpClient client = InitializeHttpClient();
 
+    private OVRCameraRig cameraRig;
+
     private static HttpClient InitializeHttpClient()
     {
         var client = new HttpClient();
@@ -105,6 +108,13 @@ public class XRNPCDialogueController : MonoBehaviour
     {
         dialogueUI.SetActive(false);
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        cameraRig = player.GetComponentInChildren<OVRCameraRig>();
+        if (cameraRig == null)
+        {
+            Debug.LogError("OVRCameraRig not found in the player object.");
+            return;
+        }
+
 
         for (int i = 0; i < responseButtons.Length; i++)
         {
@@ -117,9 +127,8 @@ public class XRNPCDialogueController : MonoBehaviour
 
     void Update()
     {
-        if (player == null) return;
 
-        float distance = Vector3.Distance(transform.position, player.position);
+        float distance = Vector3.Distance(transform.position, cameraRig.centerEyeAnchor.transform.position);
 
         if (!isInteracting && distance <= interactionRadius)
         {
