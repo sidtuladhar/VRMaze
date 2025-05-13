@@ -3304,7 +3304,7 @@ PrefabInstance:
     - target: {fileID: 1874725260514859092, guid: cf5e00f95bbc102419b456b1674f47f7, type: 3}
       propertyPath: _hmd
       value: 
-      objectReference: {fileID: 1163734938}
+      objectReference: {fileID: 0}
     - target: {fileID: 2054355030492789905, guid: cf5e00f95bbc102419b456b1674f47f7, type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
@@ -13279,7 +13279,10 @@ PrefabInstance:
       objectReference: {fileID: 9100000, guid: 31e7698f943a74ccd8f7a8a79f34a32e, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: aa4f7167bc7854383863f44fdceea95e, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 1904643130}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: aa4f7167bc7854383863f44fdceea95e, type: 3}
       insertIndex: -1
@@ -13291,6 +13294,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1661113970}
   m_SourcePrefab: {fileID: 100100000, guid: aa4f7167bc7854383863f44fdceea95e, type: 3}
+--- !u!4 &991141793 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: aa4f7167bc7854383863f44fdceea95e, type: 3}
+  m_PrefabInstance: {fileID: 991141792}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1003106285
 GameObject:
   m_ObjectHideFlags: 0
@@ -14373,17 +14381,6 @@ Transform:
   - {fileID: 1914908641}
   m_Father: {fileID: 866697754}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1163734938 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7989557518887636574, guid: f0b5b7b0202884d7489d9de917af3189, type: 3}
-  m_PrefabInstance: {fileID: 8548480170167853090}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2606bf2f0c914a7aba4390f29ba2eb6e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1182180373
 GameObject:
   m_ObjectHideFlags: 0
@@ -16745,7 +16742,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1661113964}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f95098c794534069814e29beed106d6, type: 3}
   m_Name: 
@@ -16765,7 +16762,7 @@ MonoBehaviour:
   smallTalkClip: {fileID: 8300000, guid: 1eb6b2bde780743378f2e78e134d1651, type: 3}
   mediumTalkClip: {fileID: 8300000, guid: 15559f9003ddc46b39bc3ced6e5ad28a, type: 3}
   buttonClickClip: {fileID: 8300000, guid: 9a21776fad7d4400d873c530320fd9fb, type: 3}
-  interactionRadius: 7
+  interactionRadius: 10
   systemPrompt: "You are a student NPC named Lawrence in a game called School Social
     Anxiety Simulator. You are a mentally ill, neurotic college student, full of
     paranoia, over-analysis, and self-doubt. Every interaction with you should feel
@@ -18044,14 +18041,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1904643129}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -0.24, y: 3.44, z: -11.58}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalRotation: {x: -0, y: 0.98555607, z: -0, w: 0.1693496}
+  m_LocalPosition: {x: -0.09133031, y: 0.9828572, z: 0.34350184}
+  m_LocalScale: {x: 0.28571424, y: 0.2857143, z: 0.28571424}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 98652211}
   - {fileID: 1182471997}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 991141793}
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!1001 &1911928293
 PrefabInstance:
@@ -32189,6 +32186,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: XRPlayer
       objectReference: {fileID: 0}
+    - target: {fileID: 2153509813969348752, guid: f0b5b7b0202884d7489d9de917af3189, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 9068015369659691526, guid: f0b5b7b0202884d7489d9de917af3189, type: 3}
       propertyPath: m_LocalPosition.x
       value: -2.3
@@ -32369,5 +32370,4 @@ SceneRoots:
   - {fileID: 1640205861}
   - {fileID: 779497535}
   - {fileID: 866697754}
-  - {fileID: 1904643130}
   - {fileID: 8548480170167853090}
