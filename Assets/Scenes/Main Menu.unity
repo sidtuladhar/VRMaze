@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1
   m_AmbientMode: 3
   m_SubtractiveShadowColor: {r: 0, g: 0, b: 0, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 97637a2a763b7f24b8da4e139e4144ca, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: fd99c6a72680d460ab69d1dd732a5c24, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -593,7 +593,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sceneToLoad: Play
   clickSound: {fileID: 8300000, guid: 9a21776fad7d4400d873c530320fd9fb, type: 3}
-  audioSource: {fileID: 0}
+  audioSource: {fileID: 2125800323}
 --- !u!114 &290169760
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -815,7 +815,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 507277498}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.88}
   m_LocalScale: {x: 0.0029605506, y: 0.0029605506, z: 0.0029605506}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -828,7 +828,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0.333}
+  m_AnchoredPosition: {x: 0, y: 0.486}
   m_SizeDelta: {x: 1538.5657, y: 831.9437}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &507277500
@@ -2358,8 +2358,8 @@ Transform:
   m_GameObject: {fileID: 1531715277}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.46}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 7.27}
+  m_LocalScale: {x: 1.8397, y: 1.8397, z: 1.8397}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 33552885}
