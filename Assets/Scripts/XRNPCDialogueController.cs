@@ -133,7 +133,7 @@ public class XRNPCDialogueController : MonoBehaviour
         if (!isInteracting && distance <= interactionRadius)
         {
 
-            Vector3 directionToPlayer = player.position - transform.position;
+            Vector3 directionToPlayer = cameraRig.centerEyeAnchor.transform.position - transform.position;
             directionToPlayer.y = 0; // Keep the rotation horizontal (don't tilt up/down)
 
             if (directionToPlayer != Vector3.zero)
@@ -491,7 +491,7 @@ public class XRNPCDialogueController : MonoBehaviour
     {
         if (player == null || dialogueUI == null) return;
 
-        Vector3 midpoint = (player.position + transform.position) / 2f + Vector3.up * 1.5f;
+        Vector3 midpoint = (cameraRig.centerEyeAnchor.transform.position + transform.position) / 2f + Vector3.up * 1.5f;
         dialogueUI.transform.position = midpoint;
 
         // Make UI face the player
