@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using Oculus.Interaction;
 
 public class EnemyController : MonoBehaviour
 {
@@ -20,7 +21,7 @@ public class EnemyController : MonoBehaviour
     [SerializeField] private AudioClip walkingSound;
     private AudioSource enemyAudio;
     private FlashlightSystem flashlightSystem;
-
+    private OVRCameraRig cameraRig;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -29,6 +30,7 @@ public class EnemyController : MonoBehaviour
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponentInChildren<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
+        cameraRig = player.GetComponentInChildren<OVRCameraRig>();
         mazeGenerator = FindFirstObjectByType<MazeGenerator>();
 
         if (agent == null)
@@ -54,7 +56,7 @@ public class EnemyController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, cameraRig.centerEyeAnchor.transform.position);
 
         if (distanceToPlayer <= detectionRange * 2.0f && !enemyAudio.isPlaying)
         {
@@ -65,7 +67,7 @@ public class EnemyController : MonoBehaviour
         {
             // Player detected, start chasing
             isChasing = true;
-            agent.SetDestination(player.position);
+            agent.SetDestination(cameraRig.centerEyeAnchor.transform.position);
             agent.speed = chaseSpeed;
             agent.acceleration = chaseAcceleration;
 
@@ -158,7 +160,7 @@ public class EnemyController : MonoBehaviour
     private bool IsPlayerLookingAtEnemy()
     {
         // Get the direction from player to enemy
-        Vector3 playerToEnemyDirection = (transform.position - player.position).normalized;
+        Vector3 playerToEnemyDirection = (transform.position - cameraRig.centerEyeAnchor.transform.position).normalized;
 
         // Get the player's forward direction (where they're looking)
         Vector3 playerForwardDirection = Camera.main.transform.forward;
@@ -167,14 +169,14 @@ public class EnemyController : MonoBehaviour
         float angle = Vector3.Angle(playerForwardDirection, playerToEnemyDirection);
 
         // Check distance too
-        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, cameraRig.centerEyeAnchor.transform.position);
 
 
         if (angle <= visionAngle && distanceToPlayer <= detectionRange)
         {
 
             // Cast multiple rays at slightly different positions
-            Vector3 rayStart = player.position + Vector3.up * 1.0f;
+            Vector3 rayStart = cameraRig.centerEyeAnchor.transform.position + Vector3.up * 1.0f;
 
             // Define ray offsets (center, slightly up, slightly down, slightly left, slightly right)
             // Instead of position offsets, use angle offsets
